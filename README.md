@@ -29,7 +29,7 @@ System do zarządzania magazynem sprzętu IT z funkcjami przypisywania sprzętu 
 **Karol Żmijkowski**  
 Opracowanie i rozwój systemu zarządzania magazynem sprzętu IT.
 
-_karol.zmijkowski@ilot.lukasiewicz.gov.pl_
+_karolzmijkowski@proton.me_
 
 ## Licencja
 
