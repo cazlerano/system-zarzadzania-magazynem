@@ -5,7 +5,7 @@
 	let { children } = $props();
 	let mobileMenuOpen = $state(false);
 	
-	// Navigation items configuration
+	// Konfiguracja elementów nawigacji
 	const navItems = [
 		{ href: '/', label: 'Przegląd', icon: '👤' },
 		{ href: '/magazyn', label: 'Magazyn', icon: '📋' },
@@ -15,7 +15,7 @@
 		{ href: '/admin', label: 'Admin', icon: '⚙️' }
 	];
 	
-	// Derived state for current path
+	// Stan pochodny dla aktualnej ścieżki
 	let currentPath = $derived($page.url.pathname);
 	
 	function toggleMobileMenu() {
@@ -23,7 +23,7 @@
 	}
 	
 	/**
-	 * Check if given path is active
+	 * Sprawdź czy dana ścieżka jest aktywna
 	 * @param {string} href
 	 */
 	function isActivePath(href) {
@@ -31,7 +31,7 @@
 	}
 	
 	/**
-	 * Get desktop navigation link classes
+	 * Pobierz klasy linków nawigacji desktopowej
 	 * @param {string} href
 	 */
 	function getDesktopLinkClasses(href) {
@@ -41,7 +41,7 @@
 	}
 	
 	/**
-	 * Get mobile navigation link classes
+	 * Pobierz klasy linków nawigacji mobilnej
 	 * @param {string} href
 	 */
 	function getMobileLinkClasses(href) {
@@ -78,11 +78,7 @@
 					</div>
 				</div>
 				
-				<div class="hidden sm:flex sm:items-center">
-					<!-- Puste - admin przeniesiony do głównego menu -->
-				</div>
-				
-				<!-- Mobile menu button -->
+				<!-- Przycisk menu mobilnego -->
 				<div class="sm:hidden flex items-center">
 					<button
 						type="button"
@@ -98,7 +94,7 @@
 			</div>
 		</div>
 		
-		<!-- Mobile menu -->
+		<!-- Menu mobilne -->
 		<div class="sm:hidden" class:hidden={!mobileMenuOpen}>
 			<div class="pt-2 pb-3 space-y-1">
 				{#each navItems as item}

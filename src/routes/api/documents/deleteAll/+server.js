@@ -126,7 +126,7 @@ export async function DELETE() {
 	try {
 		console.log(CONFIG.messages.info.starting);
 
-		// Load existing documents data (for completeness, though we'll delete everything)
+		// Load existing documents data (for completeness)
 		await loadDocumentsData();
 
 		// Delete all physical files from documents directory

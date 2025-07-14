@@ -54,13 +54,13 @@
 		}
 	};
 	
-	// State management with Svelte 5 runes
+	// Zarządzanie stanem
 	let usersCount = $state(0);
 	let equipmentCount = $state(0);
 	let isLoading = $state(true);
 	let isImporting = $state(false);
 	
-	// Form states
+	// Stany formularza
 	let activeUserTab = $state('manual');
 	let activeEquipmentTab = $state('manual');
 	
@@ -70,11 +70,11 @@
 		inventoryNumber: '', roomLocation: '', damaged: false
 	});
 	
-	// Messages
+	// Komunikaty
 	let userMessage = $state('');
 	let equipmentMessage = $state('');
 
-	// Derived computations
+	// Obliczenia pochodne
 	const shouldShowRoomLocation = $derived(
 		newEquipment.type === 'Monitor' || newEquipment.type === 'Drukarka'
 	);
@@ -83,7 +83,7 @@
 		newEquipment.type === 'Komputer'
 	);
 
-	// Effects
+	// Efekty
 	$effect(() => {
 		loadData();
 	});
@@ -94,7 +94,7 @@
 		}
 	});
 
-	// Utility functions for UI
+	// Funkcje narzędziowe dla interfejsu użytkownika
 	/**
 	 * @param {string} message
 	 * @returns {'success' | 'error' | 'loading' | 'info'}
@@ -164,7 +164,7 @@
 			equipmentMessage = '';
 		}
 	}
-	// Form management
+	// Zarządzanie formularzami
 	function clearUserForm() {
 		newUser = { name: '', email: '' };
 	}
@@ -176,7 +176,7 @@
 		};
 	}
 	
-	// Data loading and form handling functions
+	// Funkcje ładowania danych i obsługi formularzy
 	async function loadData() {
 		if (isImporting) return;
 		
@@ -204,7 +204,7 @@
 			return false;
 		}
 		
-		// Check if email already exists
+		// Sprawdź, czy email już istnieje
 		const users = await getUsers();
 		if (users.some(user => user.email === email)) {
 			userMessage = '❌ Użytkownik z tym emailem już istnieje';
@@ -244,13 +244,13 @@
 			return false;
 		}
 
-		// Auto-generate CLN for computers if not provided
+		// Automatycznie generuj CLN dla komputerów, jeśli nie podano
 		let finalClnNumber = clnNumber.trim();
 		if (type === 'Komputer' && !finalClnNumber) {
 			finalClnNumber = await generateNextClnNumber();
 		}
 		
-		// Check if serial number already exists
+		// Sprawdź, czy numer seryjny już istnieje
 		const equipment = await getEquipment();
 		if (equipment.some(item => item.serialNumber === serialNumber)) {
 			equipmentMessage = '❌ Sprzęt z tym numerem seryjnym już istnieje';
@@ -294,7 +294,7 @@
 		}
 	}
 
-	// CSV processing functions
+	// Funkcje przetwarzania CSV
 	/**
 	 * @param {string} csvText
 	 * @returns {Array<Array<string>>}
@@ -388,7 +388,7 @@
 				
 				userMessage = `✅ Dodano ${added} użytkowników, pominięto ${skipped}`;
 				autoHideMessage('user');
-				await loadData(); // Reload data to update counters
+				await loadData(); // Przeładuj dane żeby zaktualizować liczniki
 			} catch (error) {
 				userMessage = '❌ Błąd podczas czytania pliku CSV';
 				autoHideMessage('user');
@@ -455,7 +455,7 @@
 	 * @returns {Promise<{message: string}>}
 	 */
 	async function processEquipmentCSV(lines, headers) {
-		// Column indices
+		// Indeksy kolumn
 		const nameIndex = headers.indexOf('name');
 		const typeIndex = headers.indexOf('type');
 		const serialIndex = headers.indexOf('serialnumber');
@@ -480,7 +480,7 @@
 		console.log(`Rozpoczęcie importu ${lines.length - 1} wierszy...`);
 		equipmentMessage = `⏳ Przetwarzanie ${lines.length - 1} wierszy...`;
 		
-		// Prepare all data for import
+		// Przygotuj wszystkie dane do importu
 		const itemsToImport = [];
 		for (let i = 1; i < lines.length; i++) {
 			const values = lines[i];
@@ -507,7 +507,7 @@
 				 values[damagedIndex].replace(/"/g, '').trim() === '1' ||
 				 values[damagedIndex].replace(/"/g, '').trim().toLowerCase() === 'tak') : false;
 
-			// Validation
+			// Walidacja
 			if (!name || !type || !serialNumber) {
 				console.log(`Wiersz ${i + 1}: Brakujące dane`);
 				skipped++;
@@ -515,7 +515,7 @@
 				continue;
 			}
 			
-			// Check duplicates
+			// Sprawdź duplikaty
 			if (existingSerialNumbers.has(serialNumber) || processedSerialNumbers.has(serialNumber)) {
 				console.log(`Wiersz ${i + 1}: Duplikat numeru seryjnego: ${serialNumber}`);
 				skipped++;
@@ -538,7 +538,7 @@
 		
 		console.log(`Przygotowano ${formatCount(itemsToImport.length, 'item')} do importu`);
 		
-		// Use bulk import
+		// Użyj importu masowego
 		equipmentMessage = `⏳ Importowanie ${formatCount(itemsToImport.length, 'item')} przez bulk API...`;
 		console.log(`Wywołanie bulkAddEquipment z ${itemsToImport.length} pozycjami`);
 		
@@ -549,7 +549,7 @@
 			added = results.summary.added;
 			skipped = results.summary.skipped + results.summary.errors;
 			
-			// Collect errors from bulk import
+			// Zbierz błędy z importu masowego
 			errors = [];
 			if (results.results.skipped) {
 				results.results.skipped.forEach(/** @param {any} item */ item => {
@@ -595,13 +595,13 @@
 		<p class="text-green-600 mb-8">Dodaj nowych użytkowników i sprzęt do systemu ręcznie lub importuj z pliku CSV</p>
 		
 		<div class="grid grid-cols-1 2xl:grid-cols-2 gap-6 lg:gap-8">
-			<!-- User Import Section -->
+			<!-- Sekcja importu użytkowników -->
 			<div class="bg-white rounded-lg shadow-sm border border-green-200 p-6">
 				<h2 class="text-2xl font-bold text-green-800 mb-6 flex items-center">
 					👥 Import Użytkowników
 				</h2>
 				
-				<!-- User Tabs -->
+				<!-- Zakładki użytkowników -->
 				<div class="flex mb-6 bg-gray-100 rounded-lg p-1">
 					{#each APP_CONFIG.tabs as tab}
 						<button
@@ -614,7 +614,7 @@
 				</div>
 				
 				{#if activeUserTab === 'manual'}
-					<!-- Manual User Entry -->
+					<!-- Ręczne dodawanie użytkowników -->
 					<div class="space-y-4">
 						<div>
 							<label for="user-name" class="block text-sm font-medium text-gray-700 mb-2">
@@ -651,7 +651,7 @@
 						</button>
 					</div>
 				{:else}
-					<!-- CSV User Import -->
+					<!-- Import użytkowników z CSV -->
 					<div class="space-y-4">
 						<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
 							<h4 class="text-sm font-medium text-blue-800 mb-2">{APP_CONFIG.csvFormats.users.title}</h4>
@@ -683,13 +683,13 @@
 				{/if}
 			</div>
 			
-			<!-- Equipment Import Section -->
+			<!-- Sekcja importu sprzętu -->
 			<div class="bg-white rounded-lg shadow-sm border border-green-200 p-6">
 				<h2 class="text-2xl font-bold text-green-800 mb-6 flex items-center">
 					📦 Import Sprzętu
 				</h2>
 				
-				<!-- Equipment Tabs -->
+				<!-- Zakładki sprzętu -->
 				<div class="flex mb-6 bg-gray-100 rounded-lg p-1">
 					{#each APP_CONFIG.tabs as tab}
 						<button
@@ -702,7 +702,7 @@
 				</div>
 				
 				{#if activeEquipmentTab === 'manual'}
-					<!-- Manual Equipment Entry -->
+					<!-- Ręczne dodawanie sprzętu -->
 					<div class="space-y-4">
 						<div>
 							<label for="equipment-name" class="block text-sm font-medium text-gray-700 mb-2">
@@ -800,7 +800,7 @@
 						</button>
 					</div>
 				{:else}
-					<!-- CSV Equipment Import -->
+					<!-- Import sprzętu z CSV -->
 					<div class="space-y-4">
 						<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
 							<h4 class="text-sm font-medium text-blue-800 mb-2">{APP_CONFIG.csvFormats.equipment.title}</h4>
@@ -840,7 +840,7 @@
 			</div>
 		</div>
 		
-		<!-- Statistics -->
+		<!-- Statystyki -->
 		<div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 			<div class="bg-green-50 border border-green-200 rounded-lg p-6">
 				<h3 class="text-lg font-semibold text-green-800 mb-2">👥 Użytkownicy w systemie</h3>

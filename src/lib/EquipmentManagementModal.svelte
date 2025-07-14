@@ -8,7 +8,7 @@
 	/** @type {EquipmentManagementModalProps} */
 	let { isOpen = $bindable(), selectedUser, onUpdate } = $props();
 	
-	// Modal configuration
+	// Konfiguracja modala
 	const MODAL_CONFIG = {
 		TITLES: {
 			ASSIGN: '➕ Przypisz Sprzęt',
@@ -70,7 +70,7 @@
 		}
 	};
 	
-	// State
+	// Stan
 	/** @type {Equipment[]} */
 	let availableEquipment = $state([]);
 	/** @type {Equipment[]} */
@@ -78,13 +78,13 @@
 	let selectedEquipmentId = $state('');
 	let selectedCategory = $state('');
 	let note = $state('');
-	let isUnassignMode = $state(false); // Simple boolean instead of mode string
+	let isUnassignMode = $state(false); // Prosta wartość logiczna zamiast trybu jako string
 	let isLoading = $state(false);
 	
-	// Helper functions
+	// Funkcje pomocnicze
 	
 	/**
-	 * Get equipment emoji by type
+	 * Pobierz emoji sprzętu na podstawie typu
 	 * @param {string} type
 	 * @returns {string}
 	 */
@@ -93,7 +93,7 @@
 	}
 	
 	/**
-	 * Format equipment display text
+	 * Sformatuj tekst wyświetlania sprzętu
 	 * @param {Equipment} item
 	 * @returns {string}
 	 */
@@ -106,17 +106,17 @@
 	}
 	
 	/**
-	 * Reset form state
+	 * Zresetuj stan formularza
 	 */
 	function resetForm() {
 		selectedEquipmentId = '';
 		selectedCategory = '';
 		note = '';
-		isUnassignMode = false; // Always reset to assign mode
+		isUnassignMode = false; // Zawsze resetuj do trybu przypisania
 	}
 	
 	/**
-	 * Close modal and reset state
+	 * Zamknij modal i zresetuj stan
 	 */
 	function closeModal() {
 		isOpen = false;
@@ -124,7 +124,7 @@
 	}
 	
 	/**
-	 * Refresh available equipment data
+	 * Odśwież dane dostępnego sprzętu
 	 */
 	async function refreshAvailableEquipment() {
 		try {
@@ -139,7 +139,7 @@
 	}
 	
 	/**
-	 * Handle backdrop click
+	 * Obsłuż kliknięcie w tło modala
 	 * @param {MouseEvent} event
 	 */
 	function handleBackdropClick(event) {
@@ -149,7 +149,7 @@
 	}
 	
 	/**
-	 * Handle keyboard events
+	 * Obsłuż zdarzenia klawiatury
 	 * @param {KeyboardEvent} event
 	 */
 	function handleKeydown(event) {
@@ -159,7 +159,7 @@
 	}
 	
 	/**
-	 * Switch to assign mode
+	 * Przełącz na tryb przypisania
 	 */
 	function switchToAssign() {
 		isUnassignMode = false;
@@ -167,35 +167,35 @@
 	}
 	
 	/**
-	 * Switch to unassign mode  
+	 * Przełącz na tryb odebrania
 	 */
 	function switchToUnassign() {
 		isUnassignMode = true;
 		note = '';
 	}
 
-	// Effects
+	// Efekty
 	
-	// Load equipment when modal opens
+	// Załaduj sprzęt, gdy modal się otwiera
 	$effect(() => {
 		if (isOpen) {
 			refreshAvailableEquipment();
 		}
 	});
 
-	// Filter equipment by category
+	// Filtruj sprzęt według kategorii
 	$effect(() => {
 		if (selectedCategory) {
 			filteredEquipment = availableEquipment.filter(item => item.type === selectedCategory);
 		} else {
 			filteredEquipment = [];
 		}
-		// Reset selected equipment when category changes
+		// Zresetuj wybrany sprzęt, gdy zmienia się kategoria
 		selectedEquipmentId = '';
 	});
 	
 	/**
-	 * Handle equipment assignment
+	 * Obsłuż przypisanie sprzętu
 	 */
 	async function handleAssign() {
 		if (!selectedEquipmentId || !selectedUser) return;
@@ -212,7 +212,7 @@
 	}
 	
 	/**
-	 * Handle single equipment unassignment
+	 * Obsłuż odebranie pojedynczego sprzętu
 	 * @param {number} equipmentId
 	 */
 	async function handleUnassign(equipmentId) {
@@ -228,7 +228,7 @@
 	}
 
 	/**
-	 * Handle unassigning all equipment from user
+	 * Obsłuż odebranie całego sprzętu od użytkownika
 	 */
 	async function handleUnassignAll() {
 		if (!selectedUser.equipment || selectedUser.equipment.length === 0) return;

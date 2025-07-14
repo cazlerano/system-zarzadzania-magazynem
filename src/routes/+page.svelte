@@ -5,12 +5,12 @@
 	import UserEditModal from '$lib/UserEditModal.svelte';
 	import UserHistoryModal from '$lib/UserHistoryModal.svelte';
 	
-	// State management with Svelte 5 runes
+	// Zarządzanie stanem
 	let selectedUserId = $state(/** @type {number | null} */ (null));
 	let userEquipment = $state(/** @type {Array<any>} */ ([]));
 	let selectedUserObject = $state(/** @type {any} */ (null));
 	
-	// Modal state
+	// Stan modali
 	let isManagementModalOpen = $state(false);
 	let isHistoryModalOpen = $state(false);
 	let isUserEditModalOpen = $state(false);
@@ -18,14 +18,14 @@
 	let selectedEquipmentForHistory = $state(/** @type {any} */ (null));
 	let selectedUserForEdit = $state(/** @type {any} */ (null));
 	
-	// Search and data state
+	// Stan wyszukiwania i danych
 	let searchQuery = $state('');
 	let users = $state(/** @type {Array<any>} */ ([]));
 	let allEquipment = $state(/** @type {Array<any>} */ ([]));
 	let userEquipmentCounts = $state(/** @type {Map<number, number>} */ (new Map()));
 	let isLoading = $state(true);
 	
-	// Derived state using Svelte 5 $derived
+	// Stan pochodny
 	let filteredUsers = $derived.by(() => {
 		if (!searchQuery.trim()) return users;
 		
@@ -48,7 +48,7 @@
 		selectedUserId ? users.find(u => u.id === selectedUserId) : null
 	);
 	
-	// Equipment statistics derived states
+	// Stany pochodne statystyk sprzętu
 	let totalEquipmentCount = $derived.by(() => allEquipment.length);
 	
 	let assignedEquipmentCount = $derived.by(() => 
@@ -67,12 +67,12 @@
 		allEquipment.filter(item => item.damaged).length
 	);
 	
-	// Load data on mount
+	// Załaduj dane przy uruchomieniu
 	$effect(() => {
 		loadUsersAndEquipment();
 	});
 	
-	// Update equipment counts when users change
+	// Aktualizuj liczby sprzętu gdy użytkownicy się zmienią
 	$effect(() => {
 		if (users.length > 0) {
 			updateEquipmentCounts();
@@ -80,9 +80,9 @@
 	});
 	
 	
-	// Utility functions
+	// Funkcje narzędziowe
 	/**
-	 * Get user initials for avatar
+	 * Pobierz inicjały użytkownika dla awatara
 	 * @param {string} name
 	 */
 	const getUserInitials = (name) => {
@@ -93,7 +93,7 @@
 	};
 	
 	/**
-	 * Get equipment type emoji
+	 * Pobierz emoji typu sprzętu
 	 * @param {string} type
 	 */
 	const getEquipmentEmoji = (type) => {
@@ -111,7 +111,7 @@
 	};
 	
 	/**
-	 * Format equipment count text
+	 * Formatuj tekst liczby sprzętu
 	 * @param {number} count
 	 */
 	const formatEquipmentCount = (count) => {
@@ -119,7 +119,7 @@
 	};
 	
 	/**
-	 * Handle keyboard events for interactive elements
+	 * Obsłuż zdarzenia klawiatury dla elementów interaktywnych
 	 * @param {KeyboardEvent} event
 	 * @param {Function} callback
 	 */
@@ -130,7 +130,7 @@
 		}
 	};
 
-	// Data loading functions
+	// Funkcje ładowania danych
 	async function loadUsersAndEquipment() {
 		try {
 			isLoading = true;
@@ -160,7 +160,7 @@
 	
 	async function updateEquipmentCounts() {
 		const counts = new Map();
-		// Use Promise.all for better performance
+		// Użyj Promise.all dla lepszej wydajności
 		const equipmentPromises = users.map(async (user) => {
 			const equipment = await getEquipmentByUserId(user.id);
 			return { userId: user.id, count: equipment.length };
@@ -171,7 +171,7 @@
 		userEquipmentCounts = counts;
 	}
 	
-	// User selection and navigation
+	// Wybór użytkownika i nawigacja
 	/**
 	 * @param {any} user
 	 */
@@ -179,7 +179,7 @@
 		selectedUserId = user.id;
 		selectedUserObject = user;
 		userEquipment = await getEquipmentByUserId(user.id);
-		// Add equipment to user object for modal
+		// Dodaj sprzęt do obiektu użytkownika dla modala
 		selectedUserObject.equipment = userEquipment;
 	}
 	
@@ -189,7 +189,7 @@
 		userEquipment = [];
 	}
 	
-	// Modal handlers
+	// Obsługa modali
 	function openManagementModal() {
 		isManagementModalOpen = true;
 	}
@@ -216,11 +216,11 @@
 		isUserEditModalOpen = true;
 	}
 	
-	// Update handlers with optimized refresh logic
+	// Obsługa aktualizacji z logiką odświeżania
 	function handleUserUpdate() {
 		loadUsersAndEquipment();
 		
-		// Refresh current user data if needed
+		// Odśwież dane aktualnego użytkownika jeśli potrzeba
 		if (selectedUserId && selectedUserForEdit?.id === selectedUserId) {
 			selectUser(selectedUserForEdit);
 		}
@@ -229,13 +229,13 @@
 	function handleEquipmentUpdate() {
 		loadUsersAndEquipment();
 		
-		// Refresh current user data if needed
+		// Odśwież dane aktualnego użytkownika jeśli potrzeba
 		if (currentUser) {
 			selectUser(currentUser);
 		}
 	}
 	
-	// Search functionality
+	// Funkcjonalność wyszukiwania
 	function clearSearch() {
 		searchQuery = '';
 	}
@@ -298,7 +298,7 @@
 					<h2 class="text-2xl font-bold text-green-800 mb-6">👥 Wszyscy Użytkownicy</h2>
 					<p class="text-green-600 mb-6">Kliknij na użytkownika, aby zobaczyć przypisany do niego sprzęt</p>
 					
-					<!-- Search -->
+					<!-- Wyszukiwanie -->
 					<div class="flex items-center space-x-4">
 						<div class="flex-1 relative max-w-2xl">
 							<input
@@ -331,7 +331,7 @@
 							🔄 Odśwież listę
 						</button>
 					</div>
-							<!-- Search Results Info -->
+							<!-- Informacje o wynikach wyszukiwania -->
 				{#if searchResultsInfo}
 					<p class="text-gray-500 text-sm mt-2">{searchResultsInfo}</p>
 				{/if}
@@ -534,26 +534,26 @@
 	</div>
 </div>
 
-<!-- Equipment Management Modal -->
+<!-- Modal zarządzania sprzętem -->
 <EquipmentManagementModal 
 	bind:isOpen={isManagementModalOpen} 
 	selectedUser={selectedUserObject} 
 	onUpdate={handleEquipmentUpdate} 
 />
 
-<!-- Equipment History Modal -->
+<!-- Modal historii sprzętu -->
 <EquipmentHistoryModal 
 	bind:isOpen={isHistoryModalOpen} 
 	equipment={selectedEquipmentForHistory} 
 />
 
-<!-- User History Modal -->
+<!-- Modal historii użytkownika -->
 <UserHistoryModal 
 	bind:isOpen={isUserHistoryModalOpen} 
 	selectedUser={selectedUserObject} 
 />
 
-<!-- User Edit Modal -->
+<!-- Modal edycji użytkownika -->
 <UserEditModal 
 	bind:isOpen={isUserEditModalOpen} 
 	user={selectedUserForEdit} 

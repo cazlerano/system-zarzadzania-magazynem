@@ -11,7 +11,7 @@
 	/** @type {EquipmentHistoryModalProps} */
 	let { isOpen = $bindable(), equipment } = $props();
 	
-	// Modal configuration
+	// Konfiguracja modala
 	const MODAL_CONFIG = {
 		TITLE: '📋 Historia Sprzętu',
 		LABELS: {
@@ -66,15 +66,15 @@
 		}
 	};
 	
-	// State
+	// Stan
 	/** @type {HistoryEvent[]} */
 	let history = $state([]);
 	let isLoading = $state(false);
 	
-	// Helper functions
+	// Funkcje pomocnicze
 	
 	/**
-	 * Get equipment emoji by type
+	 * Pobierz emoji sprzętu na podstawie typu
 	 * @param {string} type
 	 * @returns {string}
 	 */
@@ -83,7 +83,7 @@
 	}
 	
 	/**
-	 * Get action display text
+	 * Pobierz tekst akcji do wyświetlenia
 	 * @param {string} action
 	 * @returns {string}
 	 */
@@ -92,7 +92,7 @@
 	}
 	
 	/**
-	 * Get action icon configuration
+	 * Pobierz konfigurację ikony akcji
 	 * @param {string} action
 	 * @returns {ActionIcon}
 	 */
@@ -102,7 +102,7 @@
 	}
 	
 	/**
-	 * Format equipment details
+	 * Sformatuj szczegóły sprzętu
 	 * @param {Equipment|null} equipment
 	 * @returns {string}
 	 */
@@ -127,7 +127,7 @@
 	}
 	
 	/**
-	 * Get current assignment status
+	 * Pobierz aktualny status przypisania
 	 * @param {Equipment} equipment
 	 * @returns {AssignmentStatus}
 	 */
@@ -160,7 +160,7 @@
 	}
 	
 	/**
-	 * Close modal
+	 * Zamknij modal
 	 */
 	function closeModal() {
 		isLoading = false;
@@ -168,7 +168,7 @@
 	}
 	
 	/**
-	 * Load equipment history
+	 * Załaduj historię sprzętu
 	 */
 	async function loadHistory() {
 		if (!equipment) return;
@@ -185,7 +185,7 @@
 	}
 	
 	/**
-	 * Handle backdrop click
+	 * Obsłuż kliknięcie w tło modala
 	 * @param {MouseEvent} event
 	 */
 	function handleBackdropClick(event) {
@@ -195,7 +195,7 @@
 	}
 	
 	/**
-	 * Handle keyboard events
+	 * Obsłuż zdarzenia klawiatury
 	 * @param {KeyboardEvent} event
 	 */
 	function handleKeydown(event) {
@@ -204,9 +204,9 @@
 		}
 	}
 
-	// Effects
+	// Efekty
 	
-	// Load history when equipment changes and modal is open
+	// Załaduj historię, gdy zmienia się sprzęt i modal jest otwarty
 	$effect(() => {
 		if (equipment && isOpen) {
 			loadHistory();

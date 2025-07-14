@@ -7,7 +7,7 @@
 	/** @type {UserHistoryModalProps} */
 	let { isOpen = $bindable(), selectedUser } = $props();
 	
-	// Modal configuration
+	// Konfiguracja modala
 	const MODAL_CONFIG = {
 		TITLE: '📋 Historia Użytkownika',
 		LABELS: {
@@ -54,12 +54,12 @@
 		}
 	};
 	
-	// State
+	// Stan
 	/** @type {any[]} */
 	let userHistory = $state([]);
 	let isLoading = $state(false);
 	
-	// Equipment emoji mapping
+	// Mapowanie emoji sprzętu
 	const EQUIPMENT_EMOJIS = {
 		'Komputer': '💻',
 		'Drukarka': '🖨️',
@@ -71,7 +71,7 @@
 	};
 	
 	/**
-	 * Get equipment emoji by type
+	 * Pobierz emoji sprzętu na podstawie typu
 	 * @param {string} type
 	 * @returns {string}
 	 */
@@ -80,7 +80,7 @@
 	}
 	
 	/**
-	 * Close modal and reset state
+	 * Zamknij modal i zresetuj stan
 	 */
 	function closeModal() {
 		isOpen = false;
@@ -88,7 +88,7 @@
 	}
 	
 	/**
-	 * Handle backdrop click
+	 * Obsłuż kliknięcie w tło modala
 	 * @param {MouseEvent} event
 	 */
 	function handleBackdropClick(event) {
@@ -98,7 +98,7 @@
 	}
 	
 	/**
-	 * Handle keyboard events
+	 * Obsłuż zdarzenia klawiatury
 	 * @param {KeyboardEvent} event
 	 */
 	function handleKeydown(event) {
@@ -108,7 +108,7 @@
 	}
 	
 	/**
-	 * Load user history when modal opens
+	 * Załaduj historię użytkownika, gdy modal się otwiera
 	 */
 	async function loadUserHistory() {
 		if (!selectedUser || !isOpen) return;
@@ -125,7 +125,7 @@
 	}
 	
 	/**
-	 * Get action label with fallback
+	 * Pobierz etykietę akcji z domyślną wartością
 	 * @param {string} action
 	 * @returns {string}
 	 */
@@ -134,7 +134,7 @@
 	}
 	
 	/**
-	 * Get action icon with fallback
+	 * Pobierz ikonę akcji z domyślną wartością
 	 * @param {string} action
 	 * @returns {string}
 	 */
@@ -143,7 +143,7 @@
 	}
 	
 	/**
-	 * Get action color with fallback
+	 * Pobierz kolor akcji z domyślną wartością
 	 * @param {string} action
 	 * @returns {string}
 	 */
@@ -151,9 +151,9 @@
 		return MODAL_CONFIG.ACTION_COLORS[/** @type {keyof typeof MODAL_CONFIG.ACTION_COLORS} */ (action)] || 'text-gray-600 bg-gray-50';
 	}
 	
-	// Effects
+	// Efekty
 	
-	// Load history when modal opens or user changes
+	// Załaduj historię, gdy modal się otwiera lub zmienia się użytkownik
 	$effect(() => {
 		if (isOpen && selectedUser) {
 			loadUserHistory();

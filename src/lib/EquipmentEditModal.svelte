@@ -8,7 +8,7 @@
 	/** @type {EquipmentEditModalProps} */
 	let { isOpen = $bindable(), equipment, onUpdate } = $props();
 	
-	// Modal configuration
+	// Konfiguracja modala
 	const MODAL_CONFIG = {
 		TITLE: '✏️ Edytuj Sprzęt',
 		LABELS: {
@@ -88,7 +88,7 @@
 		AUTO_CLOSE_DELAY: 800
 	};
 	
-	// State
+	// Stan
 	/** @type {EquipmentFormData} */
 	let formData = $state({
 		name: '',
@@ -104,10 +104,10 @@
 	let message = $state('');
 	let showDeleteConfirmation = $state(false);
 	
-	// Helper functions
+	// Funkcje pomocnicze
 	
 	/**
-	 * Get equipment emoji by type
+	 * Pobierz emoji sprzętu na podstawie typu
 	 * @param {string} type
 	 * @returns {string}
 	 */
@@ -116,7 +116,7 @@
 	}
 	
 	/**
-	 * Initialize form data when equipment changes
+	 * Inicjalizuj dane formularza, gdy zmienia się sprzęt
 	 */
 	function initializeForm() {
 		if (equipment) {
@@ -134,7 +134,7 @@
 	}
 	
 	/**
-	 * Clear form and close modal
+	 * Wyczyść formularz i zamknij modal
 	 */
 	function closeModal() {
 		isLoading = false;
@@ -143,7 +143,7 @@
 	}
 	
 	/**
-	 * Validate form data
+	 * Waliduj dane formularza
 	 * @returns {boolean}
 	 */
 	function validateForm() {
@@ -155,12 +155,12 @@
 	}
 	
 	/**
-	 * Handle save equipment
+	 * Obsłuż zapis sprzętu
 	 */
 	async function handleSave() {
 		if (!validateForm()) return;
 		
-		// Auto-generate CLN for computers if not provided
+		// Automatycznie generuj CLN dla komputerów, jeśli nie podano
 		let clnNumber = formData.clnNumber.trim();
 		if (formData.type === 'Komputer' && !clnNumber) {
 			clnNumber = await generateNextClnNumber();
@@ -169,7 +169,7 @@
 		try {
 			isLoading = true;
 			
-			// Check if damage status changed
+			// Sprawdź, czy zmienił się status uszkodzenia
 			const originalDamaged = equipment?.damaged || false;
 			const newDamaged = formData.damaged;
 			const damageStatusChanged = originalDamaged !== newDamaged;
@@ -197,12 +197,12 @@
 			
 			const updatedEquipment = await response.json();
 			
-			// If damage status changed, add to history
+			// Jeśli zmienił się status uszkodzenia, dodaj do historii
 			if (damageStatusChanged && equipment?.id) {
 				await updateEquipmentDamageStatus(
 					equipment.id,
 					newDamaged,
-					null, // userId - could be added later if user authentication is implemented
+					null, // userId - można dodać później, jeśli zostanie zaimplementowane uwierzytelnianie użytkownika
 					newDamaged ? "Oznaczono jako uszkodzone" : "Oznaczono jako naprawione"
 				);
 			}
@@ -223,7 +223,7 @@
 	}
 	
 	/**
-	 * Handle delete equipment
+	 * Obsłuż usunięcie sprzętu
 	 */
 	async function handleDelete() {
 		if (!equipment) return;
@@ -237,7 +237,7 @@
 	}
 
 	/**
-	 * Confirm delete equipment
+	 * Potwierdź usunięcie sprzętu
 	 */
 	async function confirmDelete() {
 		if (!equipment) return;
@@ -266,14 +266,14 @@
 	}
 
 	/**
-	 * Cancel delete confirmation
+	 * Anuluj potwierdzenie usunięcia
 	 */
 	function cancelDelete() {
 		showDeleteConfirmation = false;
 	}
 	
 	/**
-	 * Handle backdrop click
+	 * Obsłuż kliknięcie w tło modala
 	 * @param {MouseEvent} event
 	 */
 	function handleBackdropClick(event) {
@@ -283,7 +283,7 @@
 	}
 	
 	/**
-	 * Handle keyboard events
+	 * Obsłuż zdarzenia klawiatury
 	 * @param {KeyboardEvent} event
 	 */
 	function handleKeydown(event) {
@@ -292,9 +292,9 @@
 		}
 	}
 	
-	// Effects
+	// Efekty
 	
-	// Load equipment data when modal opens
+	// Załaduj dane sprzętu, gdy modal się otwiera
 	$effect(() => {
 		if (isOpen && equipment) {
 			initializeForm();

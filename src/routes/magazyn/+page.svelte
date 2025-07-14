@@ -58,10 +58,10 @@
 		}
 	};
 	
-	// Types
+	// Typy
 	/** @typedef {{id: number, name: string, type: string, serialNumber: string, clnNumber?: string, inventoryNumber?: string, roomLocation?: string, assignedUser?: {name: string, email: string}, lastModified?: string, damaged?: boolean}} Equipment */
 	
-	// State management with Svelte 5 runes
+	// Zarządzanie stanem
 	let equipment = $state(/** @type {Equipment[]} */ ([]));
 	let selectedType = $state('');
 	let selectedStatus = $state('');
@@ -70,15 +70,15 @@
 	let isUpdating = $state(false);
 	let recentlyUpdatedId = $state(/** @type {number | null} */ (null));
 	
-	// Modal state
+	// Stan modali
 	let isModalOpen = $state(false);
 	let isEditModalOpen = $state(false);
 	let selectedEquipment = $state(/** @type {Equipment | null} */ (null));
 	let selectedEquipmentForEdit = $state(/** @type {Equipment | null} */ (null));
 	
-	// Utility functions - DRY helpers
+	// Funkcje narzędziowe
 	/**
-	 * Get equipment type icon
+	 * Pobierz ikonę typu sprzętu
 	 * @param {string} type
 	 * @returns {string}
 	 */
@@ -88,7 +88,7 @@
 	};
 	
 	/**
-	 * Check if equipment is assigned
+	 * Sprawdź czy sprzęt jest przypisany
 	 * @param {Equipment} item
 	 * @returns {boolean}
 	 */
@@ -97,7 +97,7 @@
 	};
 	
 	/**
-	 * Get equipment count for specific type with pluralization
+	 * Pobierz liczbę sprzętu dla określonego typu z pluralizacją
 	 * @param {string} type
 	 * @returns {string}
 	 */
@@ -107,7 +107,7 @@
 	};
 	
 	/**
-	 * Get category button classes with DRY styling
+	 * Pobierz klasy przycisków kategorii
 	 * @param {string} type
 	 * @returns {string}
 	 */
@@ -123,7 +123,7 @@
 	};
 	
 	/**
-	 * Format equipment data for export with DRY logic
+	 * Formatuj dane sprzętu do eksportu
 	 * @param {Equipment[]} items
 	 * @returns {Array<Record<string, string>>}
 	 */
@@ -146,7 +146,7 @@
 	};
 	
 	/**
-	 * Generate filename with current date
+	 * Wygeneruj nazwę pliku z aktualną datą
 	 * @param {string} prefix
 	 * @returns {string}
 	 */
@@ -156,7 +156,7 @@
 		return `${prefix}_${dateString}.xlsx`;
 	};
 	
-	// Derived states using Svelte 5 $derived with DRY filtering logic
+	// Stany pochodne
 	let filteredEquipment = $derived.by(() => {
 		const filtered = equipment.filter(item => {
 			const matchesType = !selectedType || item.type === selectedType;
@@ -177,34 +177,34 @@
 			return matchesType && matchesStatus && matchesSearch;
 		});
 
-		// Sort equipment: computers by CLN number (ascending), others by name
+		// Sortuj sprzęt: komputery według numeru CLN (rosnąco), pozostałe według nazwy
 		return filtered.sort((a, b) => {
-			// For computers, sort by CLN number first
+			// Dla komputerów, sortuj najpierw według numeru CLN
 			if (a.type === 'Komputer' && b.type === 'Komputer') {
 				const aClnNum = a.clnNumber ? parseInt(a.clnNumber.replace(/\D/g, '')) : 0;
 				const bClnNum = b.clnNumber ? parseInt(b.clnNumber.replace(/\D/g, '')) : 0;
 				
-				// If both have CLN numbers, sort by number
+				// Jeśli oba mają numery CLN, sortuj według numeru
 				if (a.clnNumber && b.clnNumber) {
 					return aClnNum - bClnNum;
 				}
-				// Items with CLN come before items without CLN
+				// Pozycje z CLN przed pozycjami bez CLN
 				if (a.clnNumber && !b.clnNumber) return -1;
 				if (!a.clnNumber && b.clnNumber) return 1;
-				// If neither has CLN, sort by name
+				// Jeśli żadna nie ma CLN, sortuj według nazwy
 				return a.name.localeCompare(b.name, 'pl');
 			}
 			
-			// Computers come first, then sort by type and name
+			// Komputery na początku, potem sortuj według typu i nazwy
 			if (a.type === 'Komputer' && b.type !== 'Komputer') return -1;
 			if (a.type !== 'Komputer' && b.type === 'Komputer') return 1;
 			
-			// For non-computers, sort by type first, then by name
+			// Dla nie-komputerów, sortuj najpierw według typu, potem według nazwy
 			if (a.type !== b.type) {
 				return a.type.localeCompare(b.type, 'pl');
 			}
 			
-			// Same type, sort by name
+			// Ten sam typ, sortuj według nazwy
 			return a.name.localeCompare(b.name, 'pl');
 		});
 	});
@@ -221,14 +221,14 @@
 		equipment.filter(item => item.damaged).length
 	);
 	
-	// Load equipment on mount
+	// Załaduj sprzęt przy uruchomieniu
 	$effect(() => {
 		loadEquipment();
 	});
 	
-	// Action handlers - DRY approach
+	// Obsługa akcji
 	/**
-	 * Clear all filters
+	 * Wyczyść wszystkie filtry
 	 */
 	function clearAllFilters() {
 		selectedType = '';
@@ -237,14 +237,14 @@
 	}
 
 	/**
-	 * Select equipment type
+	 * Wybierz typ sprzętu
 	 * @param {string} type
 	 */
 	function selectEquipmentType(type) {
 		selectedType = type;
 	}
 
-	// Data loading and management functions - DRY approach
+	// Funkcje ładowania danych i zarządzania
 	async function loadEquipment() {
 		try {
 			isLoading = true;
@@ -258,19 +258,19 @@
 	}
 	
 	/**
-	 * Update equipment locally for immediate UI feedback
+	 * Zaktualizuj sprzęt lokalnie dla natychmiastowej reakcji UI
 	 * @param {Equipment} updatedEquipmentData
 	 */
 	function updateEquipmentLocally(updatedEquipmentData) {
 		const index = equipment.findIndex(item => item.id === updatedEquipmentData.id);
 		if (index !== -1) {
 			equipment[index] = { ...equipment[index], ...updatedEquipmentData };
-			equipment = [...equipment]; // Force reactivity
+			equipment = [...equipment];
 		}
 	}
 	
 	/**
-	 * Handle equipment update with optimistic UI updates
+	 * Obsłuż aktualizację sprzętu z optymistycznymi aktualizacjami UI
 	 * @param {Equipment | null} updatedData
 	 */
 	async function handleEquipmentUpdate(updatedData = null) {
@@ -292,7 +292,7 @@
 		}
 	}
 	
-	// Modal handlers - DRY approach
+	// Obsługa modali
 	/**
 	 * @param {Equipment} item
 	 */
@@ -311,28 +311,28 @@
 		isEditModalOpen = true;
 	}
 
-	// Excel export function - refactored with DRY helpers
+	// Funkcja eksportu do Excel
 	async function exportToExcel() {
 		try {
 			const workbook = new ExcelJS.Workbook();
 			
-			// Equipment grouped by type with DRY logic
+			// Sprzęt pogrupowany według typu
 			/** @type {Record<string, Equipment[]>} */
 			const equipmentByType = {};
 			
-			// Initialize all equipment types from config
+			// Zainicjuj wszystkie typy sprzętu z konfiguracji
 			Object.values(equipmentTypes).forEach(type => {
 				equipmentByType[type] = [];
 			});
 			
-			// Group equipment by types
+			// Pogrupuj sprzęt według typów
 			equipment.forEach(item => {
 				if (equipmentByType[item.type]) {
 					equipmentByType[item.type].push(item);
 				}
 			});
 			
-			// Add summary sheet as first sheet using config
+			// Dodaj arkusz podsumowania jako pierwszy arkusz używając konfiguracji
 			const summaryWorksheet = workbook.addWorksheet('Podsumowanie');
 			summaryWorksheet.columns = APP_CONFIG.summaryColumns;
 			
@@ -346,7 +346,7 @@
 			
 			summaryWorksheet.addRows(summaryData);
 			
-			// Create a sheet for each equipment type
+			// Utwórz arkusz dla każdego typu sprzętu
 			Object.keys(equipmentByType).forEach(type => {
 				if (equipmentByType[type].length > 0) {
 					const worksheet = workbook.addWorksheet(type);
@@ -356,13 +356,13 @@
 				}
 			});
 			
-			// Add "All Equipment" sheet
+			// Dodaj arkusz "Wszystko"
 			const allEquipmentWorksheet = workbook.addWorksheet('Wszystko');
 			allEquipmentWorksheet.columns = APP_CONFIG.exportColumns;
 			const allEquipmentData = formatEquipmentData(equipment);
 			allEquipmentWorksheet.addRows(allEquipmentData);
 			
-			// Save file with generated filename
+			// Zapisz plik z wygenerowaną nazwą
 			const fileName = generateFilename();
 			const buffer = await workbook.xlsx.writeBuffer();
 			const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -647,8 +647,8 @@
 	</div>
 </div>
 
-<!-- Equipment History Modal -->
+<!-- Modal historii sprzętu -->
 <EquipmentHistoryModal bind:isOpen={isModalOpen} equipment={selectedEquipment} />
 
-<!-- Equipment Edit Modal -->
+<!-- Modal edycji sprzętu -->
 <EquipmentEditModal bind:isOpen={isEditModalOpen} equipment={selectedEquipmentForEdit} onUpdate={handleEquipmentUpdate} />

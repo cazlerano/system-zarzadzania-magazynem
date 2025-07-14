@@ -38,11 +38,11 @@
 		defaultCategory: { id: 1, name: 'Ogólne' }
 	};
 
-	// Types
+	// Typy
 	/** @typedef {{id: number, name: string, size: string, uploadDate: string, categoryId: number, description?: string}} Document */
 	/** @typedef {{id: number, name: string, description: string, createdDate: string}} Category */
 
-	// State management with Svelte 5 runes
+	// Zarządzanie stanem
 	/** @type {Array<Document>} */
 	let documents = $state([]);
 	/** @type {Array<Category>} */
@@ -55,7 +55,7 @@
 	let uploadMessage = $state('');
 	let dragOver = $state(false);
 	
-	// Modal states
+	// Stany modali
 	let showDeleteModal = $state(false);
 	let showCategoryModal = $state(false);
 	let showDeleteCategoryModal = $state(false);
@@ -68,14 +68,14 @@
 	/** @type {Category | null} */
 	let categoryToDelete = $state(null);
 	
-	// Form states
+	// Stany formularza
 	let selectedCategoryId = $state(APP_CONFIG.defaultCategory.id);
 	let newCategoryName = $state('');
 	let newCategoryDescription = $state('');
 	/** @type {number | null} */
 	let filteredCategoryId = $state(null);
 
-	// Derived computations
+	// Obliczenia pochodne
 	const filteredDocuments = $derived(
 		filteredCategoryId === null 
 			? documents 
@@ -86,11 +86,11 @@
 		filteredCategoryId ? getCategoryName(filteredCategoryId) : 'Wszystkie'
 	);
 
-	// Effects
+	// Efekty
 	$effect(() => {
 		loadData();
 	});
-	// DRY utility functions
+	// Funkcje narzędziowe
 	/**
 	 * @param {string} message
 	 * @returns {'success' | 'error'}
@@ -166,7 +166,7 @@
 		return category ? category.name : 'Nieznana firma';
 	}
 
-	// Data loading functions
+	// Funkcje ładowania danych
 	async function loadData() {
 		try {
 			await Promise.all([loadDocuments(), loadCategories()]);
@@ -179,7 +179,7 @@
 			const response = await fetch('/api/categories');
 			if (response.ok) {
 				categories = await response.json();
-				// Set default category if none selected
+				// Ustaw domyślną kategorię, jeśli żadna nie jest wybrana
 				if (categories.length > 0 && !selectedCategoryId) {
 					selectedCategoryId = categories[0].id;
 				}
@@ -203,7 +203,7 @@
 		}
 	}
 	
-	// File upload functions
+	// Funkcje przesyłania plików
 	/**
 	 * @param {Event} event
 	 */
@@ -213,7 +213,7 @@
 		if (!files || files.length === 0) return;
 		
 		await uploadFiles(files);
-		// Reset input
+		// Resetuj input
 		target.value = '';
 	}
 
@@ -286,7 +286,7 @@
 		}
 	}
 	
-	// Drag & Drop handlers
+	// Obsługa przeciągania i upuszczania
 	/**
 	 * @param {DragEvent} event
 	 */
@@ -316,7 +316,7 @@
 		}
 	}
 
-	// Document management functions
+	// Funkcje zarządzania dokumentami
 	/**
 	 * @param {number} documentId
 	 */
@@ -329,7 +329,7 @@
 	}
 	
 	/**
-	 * Confirm deletion and actually delete the document
+	 * Potwierdź usunięcie i faktycznie usuń dokument
 	 */
 	async function confirmDelete() {
 		if (!documentToDelete) return;
@@ -365,7 +365,7 @@
 		documentToDelete = null;
 	}
 	
-	// Category management functions
+	// Funkcje zarządzania kategoriami
 	/**
 	 * @param {'add' | 'edit'} mode
 	 * @param {Category | null} category
@@ -393,7 +393,7 @@
 	}
 	
 	/**
-	 * Save category (add or edit)
+	 * Zapisz kategorię (dodaj lub edytuj)
 	 */
 	async function saveCategory() {
 		if (!newCategoryName.trim()) {
@@ -430,7 +430,7 @@
 	}
 	
 	/**
-	 * Delete category
+	 * Usuń kategorię
 	 * @param {any} category
 	 */
 	async function deleteCategory(category) {
@@ -439,7 +439,7 @@
 	}
 
 	/**
-	 * Confirm category deletion and actually delete the category
+	 * Potwierdź usunięcie kategorii i faktycznie usuń kategorię
 	 */
 	async function confirmDeleteCategory() {
 		if (!categoryToDelete) return;
@@ -473,7 +473,7 @@
 		categoryToDelete = null;
 	}
 	
-	// Filtering functions
+	// Funkcje filtrowania
 	/**
 	 * @param {number|null} categoryId
 	 */
@@ -485,7 +485,7 @@
 		filteredCategoryId = null;
 	}
 
-	// Export functions
+	// Funkcje eksportu
 	/**
 	 * @param {number|null} categoryId
 	 */
@@ -505,7 +505,7 @@
 				const a = document.createElement('a');
 				a.href = url;
 				
-				// Generate filename
+				// Generuj nazwę pliku
 				const categoryName = categoryId ? getCategoryName(categoryId) : 'wszystkie_dokumenty';
 				const date = new Date().toISOString().split('T')[0];
 				a.download = `dokumenty_${categoryName}_${date}.zip`;
@@ -567,11 +567,11 @@
 			</div>
 		</div>
 
-			<!-- Upload area -->
+			<!-- Obszar przesyłania -->
 			<div class="bg-white p-4 lg:p-6 rounded-lg shadow-sm mb-6">
 				<h3 class="text-lg font-semibold text-blue-800 mb-4">📤 Prześlij dokumenty</h3>
 				
-				<!-- Category selection -->
+				<!-- Wybór kategorii -->
 				<div class="mb-4">
 					<label for="category-select" class="block text-sm font-medium text-blue-700 mb-2">
 						Wybierz firmę:
@@ -587,7 +587,7 @@
 					</select>
 				</div>
 				
-				<!-- Drag & Drop Area -->
+				<!-- Obszar przeciągania i upuszczania -->
 				<div 
 					class="border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200"
 					class:border-blue-300={!dragOver}
@@ -643,7 +643,7 @@
 				{/if}
 			</div>
 
-		<!-- Categories management -->
+		<!-- Zarządzanie kategoriami -->
 		<div class="bg-white p-4 lg:p-6 rounded-lg shadow-sm mb-6">
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
 				<h3 class="text-lg font-semibold text-blue-800 mb-2 sm:mb-0">🏢 Zarządzanie firmami</h3>
@@ -670,7 +670,7 @@
 			
 			{#if categories.length > 0}
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-					<!-- Special "All" tile -->
+					<!-- Specjalna kafelka "Wszystkie" -->
 					<div 
 						class="border border-blue-200 rounded-lg p-4 hover:bg-blue-50 transition-colors duration-150 cursor-pointer"
 						class:bg-blue-100={filteredCategoryId === null}
@@ -776,7 +776,7 @@
 			{/if}
 		</div>
 
-		<!-- Documents list -->
+		<!-- Lista dokumentów -->
 		<div class="bg-white shadow-sm rounded-lg overflow-hidden">
 			<div class="px-2 py-5 sm:px-4 lg:px-6">
 				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
@@ -892,7 +892,7 @@
 	</div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Modal potwierdzenia usunięcia -->
 {#if showDeleteModal && documentToDelete}
 	<div 
 		class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
@@ -955,7 +955,7 @@
 	</div>
 {/if}
 
-<!-- Category Management Modal -->
+<!-- Modal zarządzania kategoriami -->
 {#if showCategoryModal}
 	<div 
 		class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
@@ -1029,7 +1029,7 @@
 	</div>
 {/if}
 
-<!-- Category Delete Confirmation Modal -->
+<!-- Modal potwierdzenia usunięcia kategorii -->
 {#if showDeleteCategoryModal && categoryToDelete}
 	<div 
 		class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 

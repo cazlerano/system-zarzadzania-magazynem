@@ -1,13 +1,13 @@
 // Zarządzanie danymi oparte na API dla aplikacji magazynowej
 
-// Polish pluralization utility - KISS & DRY approach
+// Polska funkcja pluralizacji
 /**
- * Pluralize Polish words based on count
- * @param {number} count - Number to determine plural form
- * @param {string} singular - Singular form (1 item)
- * @param {string} plural2to4 - Plural form for 2-4 items
- * @param {string} plural5plus - Plural form for 5+ items
- * @returns {string} Properly pluralized word
+ * Pluralizuj polskie słowa na podstawie liczby
+ * @param {number} count - Liczba określająca formę liczby mnogiej
+ * @param {string} singular - Forma pojedyncza (1 element)
+ * @param {string} plural2to4 - Forma mnoga dla 2-4 elementów
+ * @param {string} plural5plus - Forma mnoga dla 5+ elementów
+ * @returns {string} Odpowiednio odmienione słowo
  */
 export function pluralize(count, singular, plural2to4, plural5plus) {
   const absCount = Math.abs(count);
@@ -24,7 +24,7 @@ export function pluralize(count, singular, plural2to4, plural5plus) {
 }
 
 /**
- * Predefined pluralization patterns for common words
+ * Predefiniowane wzorce pluralizacji dla popularnych słów
  */
 export const PLURAL_PATTERNS = {
   equipment: {
@@ -80,10 +80,10 @@ export const PLURAL_PATTERNS = {
 };
 
 /**
- * Quick pluralization for predefined patterns
- * @param {number} count - Number to determine plural form
- * @param {keyof PLURAL_PATTERNS} pattern - Predefined pattern key
- * @returns {string} Pluralized word
+ * Szybka pluralizacja dla predefiniowanych wzorców
+ * @param {number} count - Liczba do określenia formy liczby mnogiej
+ * @param {keyof PLURAL_PATTERNS} pattern - Klucz predefiniowanego wzorca
+ * @returns {string} Odmienione słowo
  */
 export function pluralizePattern(count, pattern) {
   const p = PLURAL_PATTERNS[pattern];
@@ -95,10 +95,10 @@ export function pluralizePattern(count, pattern) {
 }
 
 /**
- * Format count with pluralized word
- * @param {number} count - Number to display
- * @param {keyof PLURAL_PATTERNS} pattern - Predefined pattern key
- * @returns {string} Formatted count with pluralized word
+ * Formatuj liczbę z odmienionym słowem
+ * @param {number} count - Liczba do wyświetlenia
+ * @param {keyof PLURAL_PATTERNS} pattern - Klucz predefiniowanego wzorca
+ * @returns {string} Sformatowana liczba z odmienionym słowem
  */
 export function formatCount(count, pattern) {
   return `${count} ${pluralizePattern(count, pattern)}`;
@@ -122,7 +122,7 @@ let equipmentState = null;
 /** @type {Array<any> | null} */
 let historyState = null;
 
-// API configuration
+// Konfiguracja API
 const API_CONFIG = {
   BASE: "/api",
   ENDPOINTS: {
@@ -136,7 +136,7 @@ const API_CONFIG = {
   }
 };
 
-// Centralized error handling
+// Centralne zarządzanie błędami
 class APIError extends Error {
   /**
    * @param {string} message
@@ -152,10 +152,10 @@ class APIError extends Error {
 }
 
 /**
- * Generic API call handler
- * @param {string} endpoint
- * @param {RequestInit} options
- * @returns {Promise<any>}
+ * Ogólna obsługa wywołań API
+ * @param {string} endpoint - Punkt końcowy API
+ * @param {RequestInit} options - Opcje zapytania
+ * @returns {Promise<any>} - Odpowiedź z API
  */
 async function apiCall(endpoint, options = {}) {
   try {
@@ -188,11 +188,11 @@ async function apiCall(endpoint, options = {}) {
 }
 
 /**
- * Generic data loader with caching
- * @param {string} endpoint
- * @param {function(): any} getState
- * @param {function(any): void} setState
- * @param {string} errorMessage
+ * Ogólny loader danych z cache lub API
+ * @param {string} endpoint - Punkt końcowy API
+ * @param {function(): any} getState - Funkcja pobierająca stan cache
+ * @param {function(any): void} setState - Funkcja ustawiająca stan cache
+ * @param {string} errorMessage - Wiadomość błędu w przypadku niepowodzenia
  */
 async function loadData(endpoint, getState, setState, errorMessage) {
   try {
@@ -207,7 +207,7 @@ async function loadData(endpoint, getState, setState, errorMessage) {
 }
 
 /**
- * Cache management utilities
+ * Narzędzia do zarządzania cache
  */
 const cacheManager = {
   users: {
@@ -228,7 +228,7 @@ const cacheManager = {
 };
 
 /**
- * Load users from API
+ * Załaduj użytkowników z API
  */
 async function loadUsers() {
   return loadData(
@@ -240,7 +240,7 @@ async function loadUsers() {
 }
 
 /**
- * Load equipment from API
+ * Załaduj sprzęt z API
  */
 async function loadEquipment() {
   return loadData(
@@ -252,7 +252,7 @@ async function loadEquipment() {
 }
 
 /**
- * Load history from API
+ * Załaduj historię z API
  */
 async function loadHistory() {
   return loadData(
@@ -263,10 +263,10 @@ async function loadHistory() {
   );
 }
 
-// Public API functions
+// Publiczne funkcje API
 
 /**
- * Get users (with cache or from API)
+ * Pobierz użytkowników (z cache lub z API)
  */
 export async function getUsers() {
   if (!usersState) {
@@ -276,7 +276,7 @@ export async function getUsers() {
 }
 
 /**
- * Get equipment (with cache or from API)
+ * Pobierz sprzęt (z cache lub z API)
  */
 export async function getEquipment() {
   if (!equipmentState) {
@@ -286,7 +286,7 @@ export async function getEquipment() {
 }
 
 /**
- * Get history (with cache or from API)
+ * Pobierz historię (z cache lub z API)
  */
 export async function getHistory() {
   if (!historyState) {
@@ -296,7 +296,8 @@ export async function getHistory() {
 }
 
 /**
- * @param {number} userId
+ * Pobierz sprzęt przypisany do użytkownika
+ * @param {number} userId - ID użytkownika
  */
 export async function getEquipmentByUserId(userId) {
   const equipment = await getEquipment();
@@ -313,14 +314,14 @@ export async function getEquipmentByUserId(userId) {
 }
 
 /**
- * Clear equipment cache only
+ * Wyczyść cache sprzętu
  */
 export function clearEquipmentCache() {
   cacheManager.equipment.clear();
 }
 
 /**
- * Get all equipment with assigned user info
+ * Pobierz cały sprzęt z informacją o przypisanych użytkownikach
  */
 export async function getAllEquipment() {
   const equipment = await getEquipment();
@@ -335,7 +336,8 @@ export async function getAllEquipment() {
 }
 
 /**
- * @param {number} equipmentId
+ * Pobierz historię sprzętu
+ * @param {number} equipmentId - ID sprzętu
  */
 export async function getEquipmentHistory(equipmentId) {
   const history = await getHistory();
@@ -358,7 +360,8 @@ export async function getEquipmentHistory(equipmentId) {
 }
 
 /**
- * @param {string} dateString
+ * Formatuj datę na polski format
+ * @param {string} dateString - Data w formacie string
  */
 export function formatDate(dateString) {
   const date = new Date(dateString);
@@ -370,25 +373,25 @@ export function formatDate(dateString) {
 }
 
 /**
- * Get available equipment (bez przypisanych)
+ * Pobierz dostępny sprzęt (bez przypisanych użytkowników)
  */
 export async function getAvailableEquipment() {
   const equipment = await getEquipment();
   return equipment.filter((/** @type {any} */ item) => !item.assignedTo);
 }
 
-// Equipment and User management functions
+// Funkcje zarządzania sprzętem i użytkownikami
 
 /**
- * Generic function to handle equipment assignment/unassignment
- * @param {number} equipmentId
- * @param {number | null} userId
- * @param {string} action
- * @param {string} note
+ * Ogólna funkcja do obsługi przypisywania/odpinania sprzętu
+ * @param {number} equipmentId - ID sprzętu
+ * @param {number | null} userId - ID użytkownika (null dla odpięcia)
+ * @param {string} action - Akcja (przypisanie/odpięcie)
+ * @param {string} note - Notatka
  */
 async function updateEquipmentAssignment(equipmentId, userId, action, note) {
   try {
-    // Update equipment assignment
+    // Edytuj przypisanie sprzętu
     const equipmentResponse = await apiCall(API_CONFIG.ENDPOINTS.EQUIPMENT, {
       method: "PUT",
       body: JSON.stringify({
@@ -397,7 +400,7 @@ async function updateEquipmentAssignment(equipmentId, userId, action, note) {
       }),
     });
 
-    // Add to history
+    // Dodaj do historii
     await apiCall(API_CONFIG.ENDPOINTS.HISTORY, {
       method: "POST",
       body: JSON.stringify({
@@ -408,7 +411,7 @@ async function updateEquipmentAssignment(equipmentId, userId, action, note) {
       }),
     });
 
-    // Clear relevant caches
+    // Wyczyść odpowiednie cache
     cacheManager.equipment.clear();
     cacheManager.history.clear();
 
@@ -420,19 +423,19 @@ async function updateEquipmentAssignment(equipmentId, userId, action, note) {
 }
 
 /**
- * Assign equipment to user
- * @param {number} equipmentId
- * @param {number} userId
- * @param {string} note
+ * Przypisz sprzęt do użytkownika
+ * @param {number} equipmentId - ID sprzętu
+ * @param {number} userId - ID użytkownika
+ * @param {string} note - Notatka
  */
 export async function assignEquipment(equipmentId, userId, note = "") {
   return updateEquipmentAssignment(equipmentId, userId, "assigned", note);
 }
 
 /**
- * Unassign equipment from user
- * @param {number} equipmentId
- * @param {string} note
+ * Odłącz sprzęt od użytkownika
+ * @param {number} equipmentId - ID sprzętu
+ * @param {string} note - Notatka
  */
 export async function unassignEquipment(equipmentId, note = "") {
   try {
@@ -449,10 +452,10 @@ export async function unassignEquipment(equipmentId, note = "") {
 }
 
 /**
- * Add new user
- * @param {string} name
- * @param {string} email
- * @returns {Promise<boolean>}
+ * Dodaj nowego użytkownika
+ * @param {string} name - Imię użytkownika
+ * @param {string} email - Email użytkownika
+ * @returns {Promise<boolean>} Czy operacja się powiodła
  */
 export async function addUser(name, email) {
   try {
@@ -473,14 +476,14 @@ export async function addUser(name, email) {
 }
 
 /**
- * Add new equipment with centralized logic
- * @param {string} name
- * @param {string} type
- * @param {string} serialNumber
- * @param {string} [clnNumber] - CLN number (required for computers)
- * @param {string} [inventoryNumber] - Inventory number (optional)
- * @param {string} [roomLocation] - Room location (optional, for monitors and printers)
- * @returns {Promise<boolean>}
+ * Dodaj nowy sprzęt z centralną logiką
+ * @param {string} name - Nazwa sprzętu
+ * @param {string} type - Typ sprzętu
+ * @param {string} serialNumber - Numer seryjny
+ * @param {string} [clnNumber] - Numer CLN (wymagany dla komputerów)
+ * @param {string} [inventoryNumber] - Numer inwentarzowy (opcjonalny)
+ * @param {string} [roomLocation] - Lokalizacja (opcjonalna, dla monitorów i drukarek)
+ * @returns {Promise<boolean>} Czy operacja się powiodła
  */
 export async function addEquipment(
   name,
@@ -499,17 +502,17 @@ export async function addEquipment(
       serialNumber: serialNumber.trim(),
     };
 
-    // Add CLN number for computers
+    // Dodaj numer CLN dla komputerów
     if (type === "Komputer" && clnNumber) {
       equipmentData.clnNumber = clnNumber.trim();
     }
 
-    // Add inventory number if provided
+    // Dodaj numer inwentarzowy, jeśli podano
     if (inventoryNumber && inventoryNumber.trim()) {
       equipmentData.inventoryNumber = inventoryNumber.trim();
     }
 
-    // Add room location if provided (for monitors and printers)
+    // Dodaj lokalizację dla monitorów i drukarek, jeśli podano
     if (
       (type === "Monitor" || type === "Drukarka") &&
       roomLocation &&
@@ -518,7 +521,7 @@ export async function addEquipment(
       equipmentData.roomLocation = roomLocation.trim();
     }
 
-    // Add damaged status
+    // Dodaj informację o uszkodzeniu, jeśli podano
     if (damaged) {
       equipmentData.damaged = damaged;
     }
@@ -528,7 +531,7 @@ export async function addEquipment(
       body: JSON.stringify(equipmentData),
     });
 
-    // Add to history
+    // Dodaj do historii
     await apiCall(API_CONFIG.ENDPOINTS.HISTORY, {
       method: "POST",
       body: JSON.stringify({
@@ -539,7 +542,7 @@ export async function addEquipment(
       }),
     });
 
-    // If equipment was added as damaged, add damage history entry
+    // Jeśli sprzęt został dodany jako uszkodzony, dodaj wpis o uszkodzeniu
     if (damaged) {
       await apiCall(API_CONFIG.ENDPOINTS.HISTORY, {
         method: "POST",
@@ -552,7 +555,7 @@ export async function addEquipment(
       });
     }
 
-    // Clear relevant caches
+    // Wyczyść odpowiednie cache
     cacheManager.equipment.clear();
     cacheManager.history.clear();
 
@@ -564,9 +567,9 @@ export async function addEquipment(
 }
 
 /**
- * Bulk add equipment - import multiple equipment at once
- * @param {Array<{name: string, type: string, serialNumber: string, clnNumber?: string, inventoryNumber?: string, roomLocation?: string, damaged?: boolean}>} items
- * @returns {Promise<{success: boolean, results?: any, error?: string}>}
+ * Masowe dodawanie sprzętu - import wielu pozycji jednocześnie
+ * @param {Array<{name: string, type: string, serialNumber: string, clnNumber?: string, inventoryNumber?: string, roomLocation?: string, damaged?: boolean}>} items - Lista sprzętu do dodania
+ * @returns {Promise<{success: boolean, results?: any, error?: string}>} Wynik operacji
  */
 export async function bulkAddEquipment(items) {
   try {
@@ -577,14 +580,14 @@ export async function bulkAddEquipment(items) {
       body: JSON.stringify({ items }),
     });
 
-    // Add to history for each successfully added equipment
+    // Dodaj wpisy do historii dla każdej dodanej pozycji
     if (result.results && result.results.added) {
       for (let i = 0; i < result.results.added.length; i++) {
         const addedItem = result.results.added[i];
         const originalItem = items[i]; // Assuming order is preserved
         
         try {
-          // Add basic "added" history entry
+          // Dodaj podstawowy wpis do historii
           await apiCall(API_CONFIG.ENDPOINTS.HISTORY, {
             method: "POST",
             body: JSON.stringify({
@@ -595,7 +598,7 @@ export async function bulkAddEquipment(items) {
             }),
           });
 
-          // If equipment was added as damaged, add damage history entry
+          // Jeśli sprzęt został dodany jako uszkodzony, dodaj wpis o uszkodzeniu
           if (originalItem && originalItem.damaged) {
             await apiCall(API_CONFIG.ENDPOINTS.HISTORY, {
               method: "POST",
@@ -616,7 +619,7 @@ export async function bulkAddEquipment(items) {
       }
     }
 
-    // Clear relevant caches
+    // Wyczyść odpowiednie cache
     cacheManager.equipment.clear();
     cacheManager.history.clear();
 
@@ -632,9 +635,9 @@ export async function bulkAddEquipment(items) {
 }
 
 /**
- * Delete equipment
- * @param {number} equipmentId
- * @returns {Promise<{success: boolean, error?: string}>}
+ * Usuń sprzęt
+ * @param {number} equipmentId - ID sprzętu
+ * @returns {Promise<{success: boolean, error?: string}>} Wynik operacji
  */
 export async function deleteEquipment(equipmentId) {
   try {
@@ -643,7 +646,7 @@ export async function deleteEquipment(equipmentId) {
       body: JSON.stringify({ id: equipmentId }),
     });
 
-    // Add to history
+    // Dodaj wpis do historii
     await apiCall(API_CONFIG.ENDPOINTS.HISTORY, {
       method: "POST",
       body: JSON.stringify({
@@ -654,7 +657,7 @@ export async function deleteEquipment(equipmentId) {
       }),
     });
 
-    // Clear relevant caches
+    // Wyczyść odpowiednie cache
     cacheManager.equipment.clear();
     cacheManager.history.clear();
 
@@ -669,9 +672,9 @@ export async function deleteEquipment(equipmentId) {
 }
 
 /**
- * Delete user
- * @param {number} userId
- * @returns {Promise<{success: boolean, error?: string}>}
+ * Usuń użytkownika
+ * @param {number} userId - ID użytkownika
+ * @returns {Promise<{success: boolean, error?: string}>} Wynik operacji
  */
 export async function deleteUser(userId) {
   try {
@@ -692,8 +695,8 @@ export async function deleteUser(userId) {
 }
 
 /**
- * Generate next CLN number
- * @returns {Promise<string>}
+ * Generuj kolejny numer CLN
+ * @returns {Promise<string>} Wygenerowany numer CLN
  */
 export async function generateNextClnNumber() {
   try {
@@ -707,7 +710,7 @@ export async function generateNextClnNumber() {
       return "CLN000001";
     }
 
-    // Find highest CLN number
+    // Wyszukaj najwyższy numer CLN
     const clnNumbers = computers
       .map((/** @type {any} */ computer) => computer.clnNumber)
       .filter((/** @type {any} */ cln) => cln && cln.startsWith("CLN"))
@@ -725,32 +728,32 @@ export async function generateNextClnNumber() {
 }
 
 /**
- * Force refresh all caches - forces refresh of all caches
+ * Wymuś odświeżenie wszystkich cache
  */
 export async function forceRefreshAllData() {
   console.log("Wymuszanie odświeżenia wszystkich cache'ów");
   
-  // Clear all caches
+  // Wyczyść wszystkie cache
   Object.values(cacheManager).forEach(cache => cache.clear());
 
-  // Reload data
+  // Przeładuj wszystkie dane
   await Promise.all([loadUsers(), loadEquipment(), loadHistory()]);
 }
 
-// Initialize data when module loads
+// Inicjalizacja danych przy ładowaniu modułu
 if (typeof window !== "undefined") {
-  // Only in browser environment
+  // Tylko w przeglądarce
   loadUsers();
   loadEquipment();
   loadHistory();
 }
 
 /**
- * Update equipment damage status and add history entry
- * @param {number} equipmentId
- * @param {boolean} damaged
+ * Zaktualizuj status uszkodzenia sprzętu i dodaj wpis do historii
+ * @param {number} equipmentId - ID sprzętu
+ * @param {boolean} damaged - Czy sprzęt jest uszkodzony
  * @param {number | null} userId - ID użytkownika wykonującego zmianę
- * @param {string} note
+ * @param {string} note - Notatka
  */
 export async function updateEquipmentDamageStatus(equipmentId, damaged, userId = null, note = "") {
   try {
@@ -763,7 +766,7 @@ export async function updateEquipmentDamageStatus(equipmentId, damaged, userId =
       }),
     });
 
-    // Add to history
+    // Dodaj wpis do historii
     const action = damaged ? "damaged" : "repaired";
     const historyNote = note || (damaged ? "Oznaczono jako uszkodzone" : "Oznaczono jako naprawione");
     
@@ -777,7 +780,7 @@ export async function updateEquipmentDamageStatus(equipmentId, damaged, userId =
       }),
     });
 
-    // Clear relevant caches
+    // Wyczyść odpowiednie cache
     cacheManager.equipment.clear();
     cacheManager.history.clear();
 
@@ -789,30 +792,30 @@ export async function updateEquipmentDamageStatus(equipmentId, damaged, userId =
 }
 
 /**
- * Get user history - all equipment assignments and unassignments for a specific user
- * @param {number} userId 
- * @returns {Promise<any[]>}
+ * Pobierz historię użytkownika - wszystkie przypisania i odłączenia sprzętu dla danego użytkownika
+ * @param {number} userId - ID użytkownika
+ * @returns {Promise<any[]>} Lista zdarzeń
  */
 export async function getUserHistory(userId) {
   const history = await getHistory();
   const equipment = await getEquipment();
   
-  // Collect all events for this user from all equipment
+  // Zbierz wszystkie zdarzenia dla danego użytkownika
   const userEvents = [];
   
   for (const equipmentHistory of history) {
     const equipmentItem = equipment.find(e => e.id === equipmentHistory.equipmentId);
     
     for (const event of equipmentHistory.events) {
-      // Include events where user was involved (assigned TO or unassigned FROM)
+      // Włącz tylko zdarzenia przypisania lub odłączenia, które dotyczą danego użytkownika
       let shouldInclude = false;
       
       if (event.action === 'assigned' && event.userId === userId) {
         shouldInclude = true;
       } else if (event.action === 'unassigned') {
-        // For unassigned events, we need to check if this equipment was previously assigned to this user
-        // We can check the equipment's current/previous assignment from the equipment data
-        // Or find previous 'assigned' events in the same equipment history
+        // Dla zdarzeń odłączenia, sprawdź, czy ten sprzęt był wcześniej przypisany do tego użytkownika
+        // Sprawdź bieżące/poprzednie przypisanie sprzętu na podstawie danych o sprzęcie
+        // Lub znajdź poprzednie zdarzenia 'assigned' w tej samej historii sprzętu
         const previousAssignedEvent = equipmentHistory.events
           .slice(0, equipmentHistory.events.indexOf(event))
           .reverse()
@@ -832,6 +835,6 @@ export async function getUserHistory(userId) {
     }
   }
   
-  // Sort by date (newest first)
+  // Sortuj po dacie (najnowsze na górze)
   return userEvents.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }

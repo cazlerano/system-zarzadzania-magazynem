@@ -2,18 +2,18 @@
 	import { getUsers, getEquipment, getHistory, forceRefreshAllData, formatCount } from '$lib/data.js';
 	
 	/**
-	 * Format message with count placeholder replacement and pluralization
+	 * Sformatuj wiadomość z podstawieniem liczników i dodaniem właściwej formy liczby mnogiej
 	 * @param {string} template
 	 * @param {number} count
 	 * @param {number} usersCount
 	 * @param {number} equipmentCount
-	 * @param {string} sectionId - ID of the section to determine pluralization pattern
+	 * @param {string} sectionId
 	 * @returns {string}
 	 */
 	function formatMessage(template, count, usersCount = 0, equipmentCount = 0, sectionId = '') {
 		let formattedCount = count.toString();
 		
-		// Apply pluralization based on section type
+		// Zastosuj liczbę mnogą na podstawie typu sekcji
 		switch(sectionId) {
 			case 'users':
 				formattedCount = formatCount(count, 'user');
@@ -134,12 +134,12 @@
 		}
 	};
 
-	// Types
+	// Typy
 	/** @typedef {{id: string, title: string, icon: string, deleteIcon: string, description: string, endpoint: string, confirmMessage: string, buttonText: string, successMessage: string, loadingMessage: string, errorMessage: string, statsLabel: string, statsColor: string, extraWarning?: string}} Section */
 	/** @typedef {'users' | 'equipment' | 'history' | 'documents'} SectionId */
 	/** @typedef {'blue' | 'green' | 'orange' | 'purple' | 'red' | 'indigo'} ColorKey */
 	
-	// State management with Svelte 5 runes
+	// Zarządzanie stanem
 	let counts = $state(/** @type {Record<SectionId, number>} */ ({
 		users: 0,
 		equipment: 0,
@@ -162,14 +162,14 @@
 		all: false
 	}));
 	
-	// Load initial data
+	// Załaduj dane początkowe
 	$effect(() => {
 		loadData();
 	});
 	
-	// Utility functions - DRY helpers
+	// Funkcje narzędziowe
 	/**
-	 * Get message style classes based on message content
+	 * Pobierz klasy stylów komunikatu na podstawie treści wiadomości
 	 * @param {string} message
 	 * @returns {{bg: string, text: string}}
 	 */
@@ -181,7 +181,7 @@
 	}
 	
 	/**
-	 * Make API call to delete endpoint
+	 * Wykonaj wywołanie API do endpointu usuwania
 	 * @param {string} endpoint
 	 * @returns {Promise<{success: boolean, result?: any, error?: string}>}
 	 */
@@ -207,7 +207,7 @@
 	}
 	
 	/**
-	 * Generic delete section handler
+	 * Ogólny handler usuwania sekcji
 	 * @param {Section} section
 	 */
 	async function deleteSection(section) {
@@ -304,7 +304,6 @@
 		messages.general = '';
 	}
 	
-	// ...existing code...
 </script>
 
 <div class="px-4 py-6 sm:px-0">
@@ -322,7 +321,7 @@
 			</button>
 		</div>
 		
-		<!-- Statistics -->
+		<!-- Statystyki -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 			{#each ADMIN_CONFIG.sections as section}
 				{@const statsColor = /** @type {ColorKey} */ (section.statsColor)}
@@ -341,9 +340,9 @@
 			{/each}
 		</div>
 		
-		<!-- Admin Actions -->
+		<!-- Akcje administracyjne -->
 		<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6">
-			<!-- Section Delete Cards -->
+			<!-- Karty usuwania sekcji -->
 			{#each ADMIN_CONFIG.sections as section}
 				{@const sectionId = /** @type {SectionId} */ (section.id)}
 				<div class="bg-white rounded-lg shadow-sm border border-red-200 p-6 flex flex-col justify-between">
@@ -405,7 +404,7 @@
 				</div>
 			{/each}
 			
-			<!-- Delete All Data Section -->
+			<!-- Sekcja usuwania wszystkich danych -->
 			<div class="bg-white rounded-lg shadow-sm border border-red-200 p-6 flex flex-col justify-between">
 				<div>
 					<h2 class="text-xl font-bold text-red-800 mb-4 flex items-center">
@@ -464,7 +463,7 @@
 
 
 		
-		<!-- Safety Info -->
+		<!-- Informacje bezpieczeństwa -->
 		<div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
 			<h3 class="text-lg font-semibold text-yellow-800 mb-3">🛡️ Informacje bezpieczeństwa</h3>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-yellow-700">

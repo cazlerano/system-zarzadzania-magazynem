@@ -8,7 +8,7 @@
 	/** @type {UserEditModalProps} */
 	let { isOpen = $bindable(), user, onUpdate } = $props();
 	
-	// Modal configuration
+	// Konfiguracja modala
 	const MODAL_CONFIG = {
 		TITLE: '✏️ Edytuj Użytkownika',
 		MESSAGES: {
@@ -56,7 +56,7 @@
 		AUTO_CLOSE_DELAY: 1500
 	};
 	
-	// Form state
+	// Stan formularza
 	/** @type {UserFormData} */
 	let formData = $state({
 		name: '',
@@ -68,10 +68,10 @@
 	let userEquipmentCount = $state(0);
 	let showDeleteConfirmation = $state(false);
 
-	// Helper functions
+	// Funkcje pomocnicze
 	
 	/**
-	 * Initialize form data when user changes
+	 * Inicjalizuj dane formularza, gdy zmienia się użytkownik
 	 */
 	function initializeForm() {
 		if (user) {
@@ -84,8 +84,8 @@
 	}
 	
 	/**
-	 * Validate form data
-	 * @returns {string|null} Error message or null if valid
+	 * Waliduj dane formularza
+	 * @returns {string|null} Komunikat błędu lub null, jeśli dane są poprawne
 	 */
 	function validateForm() {
 		if (!formData.name.trim() || !formData.email.trim()) {
@@ -100,7 +100,7 @@
 	}
 	
 	/**
-	 * Set message with auto-clear
+	 * Ustaw komunikat z automatycznym czyszczeniem
 	 * @param {string} msg
 	 * @param {boolean} isError
 	 */
@@ -114,7 +114,7 @@
 	}
 	
 	/**
-	 * Load user equipment count
+	 * Załaduj liczbę sprzętu przypisanego do użytkownika
 	 */
 	async function loadUserEquipmentCount() {
 		if (!user) return;
@@ -129,7 +129,7 @@
 	}
 	
 	/**
-	 * Close modal and reset state
+	 * Zamknij modal i zresetuj stan
 	 */
 	function closeModal() {
 		isOpen = false;
@@ -138,7 +138,7 @@
 	}
 	
 	/**
-	 * Handle backdrop click
+	 * Obsłuż kliknięcie w tło modala
 	 * @param {MouseEvent} event
 	 */
 	function handleBackdropClick(event) {
@@ -148,7 +148,7 @@
 	}
 	
 	/**
-	 * Handle keyboard events
+	 * Obsłuż zdarzenia klawiatury
 	 * @param {KeyboardEvent} event
 	 */
 	function handleKeydown(event) {
@@ -157,7 +157,7 @@
 		}
 	}
 
-	// Effect to initialize form when modal opens
+	// Efekt inicjalizacji formularza, gdy modal się otwiera
 	$effect(() => {
 		if (isOpen && user) {
 			initializeForm();
@@ -166,7 +166,7 @@
 	});
 	
 	/**
-	 * Handle form save
+	 * Obsłuż zapis formularza
 	 */
 	async function handleSave() {
 		const validationError = validateForm();
@@ -178,7 +178,7 @@
 		try {
 			isLoading = true;
 			
-			// Update user through API - using centralized approach
+			// Zaktualizuj użytkownika przez API - użycie scentralizowanego podejścia
 			const response = await fetch('/api/users', {
 				method: 'PUT',
 				headers: {
@@ -213,7 +213,7 @@
 	}
 	
 	/**
-	 * Handle user deletion
+	 * Obsłuż usunięcie użytkownika
 	 */
 	async function handleDelete() {
 		if (!user) return;
@@ -227,7 +227,7 @@
 	}
 
 	/**
-	 * Confirm user deletion
+	 * Potwierdź usunięcie użytkownika
 	 */
 	async function confirmDelete() {
 		if (!user) return;
@@ -257,7 +257,7 @@
 	}
 
 	/**
-	 * Cancel deletion
+	 * Anuluj usunięcie
 	 */
 	function cancelDelete() {
 		showDeleteConfirmation = false;
