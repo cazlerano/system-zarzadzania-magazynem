@@ -1,5 +1,5 @@
 <script>
-	import { getUsers, getEquipment, getEquipmentByUserId, deleteUser, formatCount } from '$lib/data.js';
+	import { getUsers, getAllEquipment, getEquipmentByUserId, deleteUser, formatCount, forceRefreshAllData } from '$lib/data.js';
 	import EquipmentManagementModal from '$lib/EquipmentManagementModal.svelte';
 	import EquipmentHistoryModal from '$lib/EquipmentHistoryModal.svelte';
 	import UserEditModal from '$lib/UserEditModal.svelte';
@@ -52,15 +52,11 @@
 	let totalEquipmentCount = $derived.by(() => allEquipment.length);
 	
 	let assignedEquipmentCount = $derived.by(() => 
-		allEquipment.filter(item => 
-			Boolean(item.assignedUser || ((item.type === 'Monitor' || item.type === 'Drukarka') && item.roomLocation))
-		).length
+		allEquipment.filter(item => isEquipmentAssigned(item)).length
 	);
 	
 	let availableEquipmentCount = $derived.by(() => 
-		allEquipment.filter(item => 
-			!Boolean(item.assignedUser || ((item.type === 'Monitor' || item.type === 'Drukarka') && item.roomLocation))
-		).length
+		allEquipment.filter(item => !isEquipmentAssigned(item)).length
 	);
 	
 	let damagedEquipmentCount = $derived.by(() => 
@@ -79,8 +75,24 @@
 		}
 	});
 	
+	// Odśwież dane sprzętu gdy się zmienią
+	$effect(() => {
+		if (allEquipment.length > 0) {
+			// Wymuś reaktywność statystyk
+			console.log('Equipment data updated:', allEquipment.length);
+		}
+	});
+	
 	
 	// Funkcje narzędziowe
+	/**
+	 * Sprawdź czy sprzęt jest przypisany
+	 * @param {any} item
+	 */
+	const isEquipmentAssigned = (item) => {
+		return Boolean(item.assignedUser || ((item.type === 'Monitor' || item.type === 'Drukarka') && item.roomLocation));
+	};
+	
 	/**
 	 * Pobierz inicjały użytkownika dla awatara
 	 * @param {string} name
@@ -134,12 +146,21 @@
 	async function loadUsersAndEquipment() {
 		try {
 			isLoading = true;
+			
+			// Wymuś odświeżenie wszystkich danych (czyszczenie cache i ponowne ładowanie)
+			await forceRefreshAllData();
+			
+			// Pobierz świeże dane z cache po przeładowaniu
 			const [usersData, equipmentData] = await Promise.all([
 				getUsers(),
-				getEquipment()
+				getAllEquipment()
 			]);
-			users = usersData;
-			allEquipment = equipmentData;
+			
+			// Wymuś reaktywność poprzez przypisanie nowych tablic
+			users = [...usersData];
+			allEquipment = [...equipmentData];
+			
+			console.log('Data reloaded - users:', users.length, 'equipment:', allEquipment.length);
 		} catch (error) {
 			console.error('Error loading data:', error);
 		} finally {
@@ -216,8 +237,9 @@
 		isUserEditModalOpen = true;
 	}
 	
-	// Obsługa aktualizacji z logiką odświeżania
+	// Obsługa aktualizacji z optymalizowaną logiką odświeżania
 	function handleUserUpdate() {
+		// Wymuś ponowne załadowanie wszystkich danych
 		loadUsersAndEquipment();
 		
 		// Odśwież dane aktualnego użytkownika jeśli potrzeba
@@ -226,12 +248,18 @@
 		}
 	}
 	
-	function handleEquipmentUpdate() {
-		loadUsersAndEquipment();
+	async function handleEquipmentUpdate() {
+		// Wymuś ponowne załadowanie wszystkich danych
+		await loadUsersAndEquipment();
+		
+		// Odśwież liczby sprzętu dla wszystkich użytkowników
+		if (users.length > 0) {
+			await updateEquipmentCounts();
+		}
 		
 		// Odśwież dane aktualnego użytkownika jeśli potrzeba
 		if (currentUser) {
-			selectUser(currentUser);
+			await selectUser(currentUser);
 		}
 	}
 	
