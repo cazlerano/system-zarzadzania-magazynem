@@ -835,7 +835,7 @@
 											</div>
 										</td>
 										<td class="px-3 py-4 text-sm text-blue-500">
-											<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+											<span class="inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
 												🏢 {getCategoryName(document.categoryId)}
 											</span>
 										</td>

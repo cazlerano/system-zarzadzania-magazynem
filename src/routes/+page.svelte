@@ -427,7 +427,7 @@
 												<div class="text-sm text-green-600">{user.email}</div>
 											</td>
 											<td class="px-6 py-4 whitespace-nowrap text-center">
-												<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {userEquipmentCount > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+												<span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium {userEquipmentCount > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
 													{equipmentCountText}
 												</span>
 											</td>

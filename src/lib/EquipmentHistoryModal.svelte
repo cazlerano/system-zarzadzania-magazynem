@@ -266,14 +266,14 @@
 							{#if equipment.damaged}
 								<div class="text-sm text-red-700">
 									<strong>Status:</strong> 
-									<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+									<span class="inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
 										⚠️ Uszkodzone
 									</span>
 								</div>
 							{:else}
 								<div class="text-sm text-green-700">
 									<strong>Status:</strong> 
-									<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+									<span class="inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
 										✅ Sprawne
 									</span>
 								</div>
