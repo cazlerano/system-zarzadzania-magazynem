@@ -52,8 +52,8 @@ System Zarządzania Magazynem IT to nowoczesna aplikacja webowa stworzona z myś
 
 ```bash
 # Klonowanie repozytorium
-git clone https://github.com/[USERNAME]/system-zarzadzania-magazynem-it.git
-cd system-zarzadzania-magazynem-it
+git clone https://github.com/cazlerano/system-zarzadzania-magazynem.git
+cd system-zarzadzania-magazynem
 
 # Instalacja zależności
 npm install
