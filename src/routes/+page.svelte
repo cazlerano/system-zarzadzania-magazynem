@@ -528,9 +528,6 @@
 									</div>
 									<div class="mt-2 text-xs text-green-500">
 										<div>S/N: {item.serialNumber}</div>
-										{#if item.clnNumber}
-											<div>CLN: {item.clnNumber}</div>
-										{/if}
 										{#if item.inventoryNumber}
 											<div>INV: {item.inventoryNumber}</div>
 										{/if}

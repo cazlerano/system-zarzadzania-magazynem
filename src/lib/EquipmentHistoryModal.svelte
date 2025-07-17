@@ -1,7 +1,7 @@
 <script>
 	import { getEquipmentHistory, formatDate } from '$lib/data.js';
 	
-	/** @typedef {{id: number, name: string, type: string, serialNumber: string, clnNumber?: string, inventoryNumber?: string, roomLocation?: string, assignedUser?: {name: string, email: string}, lastModified?: string, damaged?: boolean}} Equipment */
+	/** @typedef {{id: number, name: string, type: string, serialNumber: string, inventoryNumber?: string, roomLocation?: string, assignedUser?: {name: string, email: string}, lastModified?: string, damaged?: boolean}} Equipment */
 	/** @typedef {Object} User @property {number} id @property {string} name @property {string} email */
 	/** @typedef {Object} HistoryEvent @property {string} action @property {string} date @property {string} note @property {User|null} user */
 	/** @typedef {Object} EquipmentHistoryModalProps @property {boolean} isOpen @property {Equipment|null} equipment */
@@ -113,10 +113,6 @@
 		
 		if (equipment.inventoryNumber) {
 			details += ` • INV: ${equipment.inventoryNumber}`;
-		}
-		
-		if (equipment.type === 'Komputer' && equipment.clnNumber) {
-			details += ` • CLN: ${equipment.clnNumber}`;
 		}
 		
 		if (equipment.damaged) {

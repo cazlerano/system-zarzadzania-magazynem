@@ -1,5 +1,5 @@
 <script>
-	import { getUsers, getEquipment, addUser, addEquipment, generateNextClnNumber, bulkAddEquipment, formatCount } from '$lib/data.js';
+	import { getUsers, getEquipment, addUser, addEquipment, bulkAddEquipment, formatCount } from '$lib/data.js';
 	
 	// Centralna konfiguracja aplikacji
 	const APP_CONFIG = {
@@ -17,15 +17,15 @@
 			},
 			equipment: {
 				title: 'Format pliku CSV:',
-				headers: 'name,type,serialnumber,clnnumber,inventorynumber,roomlocation,damaged',
+				headers: 'name,type,serialnumber,inventorynumber,roomlocation,damaged',
 				examples: [
-					'Dell Latitude 5520,Komputer,DL123456789,CLN00001,INV001,,false',
-					'LG 27",Monitor,LG123456789,,INV002,Pokój 101,false',
-					'HP LaserJet,Drukarka,HP987654321,,INV003,Pokój 203,true',
-					'YubiKey 5 NFC,YubiKey,YK567890123,,INV004,,false'
+					'Dell Latitude 5520,Komputer,DL123456789,INV001,,false',
+					'LG 27",Monitor,LG123456789,INV002,Pokój 101,false',
+					'HP LaserJet,Drukarka,HP987654321,INV003,Pokój 203,true',
+					'YubiKey 5 NFC,YubiKey,YK567890123,INV004,,false'
 				],
 				required: ['name', 'type', 'serialnumber'],
-				optional: ['clnnumber', 'inventorynumber', 'roomlocation', 'damaged']
+				optional: ['inventorynumber', 'roomlocation', 'damaged']
 			}
 		},
 		formFields: {
@@ -37,7 +37,6 @@
 				name: { label: 'Nazwa sprzętu:', placeholder: 'HP EliteBook 840 G6', type: 'text' },
 				type: { label: 'Typ sprzętu:', type: 'select' },
 				serialNumber: { label: 'Numer seryjny:', placeholder: 'DL123456789', type: 'text' },
-				clnNumber: { label: 'Numer CLN', placeholder: 'CLN000000', type: 'text', optional: true, showFor: ['Komputer'] },
 				inventoryNumber: { label: 'Numer inwentarzowy', placeholder: 'INV001', type: 'text', optional: true },
 				roomLocation: { label: 'Lokalizacja/Pokój', placeholder: 'Pokój 101, Sala konferencyjna A, Recepcja...', type: 'text', optional: true, showFor: ['Monitor', 'Drukarka'] },
 				damaged: { label: 'Sprzęt uszkodzony', type: 'checkbox', optional: true }
@@ -66,7 +65,7 @@
 	
 	let newUser = $state({ name: '', email: '' });
 	let newEquipment = $state({
-		name: '', type: '', serialNumber: '', clnNumber: '', 
+		name: '', type: '', serialNumber: '', 
 		inventoryNumber: '', roomLocation: '', damaged: false
 	});
 	
@@ -77,10 +76,6 @@
 	// Obliczenia pochodne
 	const shouldShowRoomLocation = $derived(
 		newEquipment.type === 'Monitor' || newEquipment.type === 'Drukarka'
-	);
-	
-	const shouldShowClnNumber = $derived(
-		newEquipment.type === 'Komputer'
 	);
 
 	// Efekty
@@ -171,7 +166,7 @@
 	
 	function clearEquipmentForm() {
 		newEquipment = { 
-			name: '', type: '', serialNumber: '', clnNumber: '', 
+			name: '', type: '', serialNumber: '', 
 			inventoryNumber: '', roomLocation: '', damaged: false
 		};
 	}
@@ -230,24 +225,17 @@
 	 * @param {string} equipmentData.name
 	 * @param {string} equipmentData.type
 	 * @param {string} equipmentData.serialNumber
-	 * @param {string} equipmentData.clnNumber
 	 * @param {string} equipmentData.inventoryNumber
 	 * @param {string} equipmentData.roomLocation
 	 * @returns {Promise<boolean>}
 	 */
 	async function validateAndAddEquipment(equipmentData) {
-		const { name, type, serialNumber, clnNumber, inventoryNumber, roomLocation } = equipmentData;
+		const { name, type, serialNumber, inventoryNumber, roomLocation } = equipmentData;
 		
 		if (!name.trim() || !type || !serialNumber.trim()) {
 			equipmentMessage = '❌ Wymagane pola: nazwa sprzętu, typ sprzętu i numer seryjny';
 			autoHideMessage('equipment');
 			return false;
-		}
-
-		// Automatycznie generuj CLN dla komputerów, jeśli nie podano
-		let finalClnNumber = clnNumber.trim();
-		if (type === 'Komputer' && !finalClnNumber) {
-			finalClnNumber = await generateNextClnNumber();
 		}
 		
 		// Sprawdź, czy numer seryjny już istnieje
@@ -262,7 +250,6 @@
 			name.trim(), 
 			type, 
 			serialNumber.trim(), 
-			finalClnNumber, 
 			inventoryNumber.trim(), 
 			roomLocation.trim(),
 			newEquipment.damaged
@@ -431,7 +418,7 @@
 				console.log('Znalezione nagłówki:', headers);
 				
 				if (!headers.includes('name') || !headers.includes('type') || !headers.includes('serialnumber')) {
-					equipmentMessage = `❌ Plik CSV musi zawierać kolumny: name, type, serialnumber (opcjonalnie: clnnumber, inventorynumber, roomlocation, damaged).\nZnalezione kolumny: ${headers.join(', ')}`;
+					equipmentMessage = `❌ Plik CSV musi zawierać kolumny: name, type, serialnumber (opcjonalnie: inventorynumber, roomlocation, damaged).\nZnalezione kolumny: ${headers.join(', ')}`;
 					isImporting = false;
 					return;
 				}
@@ -459,13 +446,12 @@
 		const nameIndex = headers.indexOf('name');
 		const typeIndex = headers.indexOf('type');
 		const serialIndex = headers.indexOf('serialnumber');
-		const clnIndex = headers.indexOf('clnnumber');
 		const inventoryIndex = headers.indexOf('inventorynumber');
 		const roomLocationIndex = headers.indexOf('roomlocation');
 		const damagedIndex = headers.indexOf('damaged');
 		
 		console.log('Indeksy kolumn:', {
-			nameIndex, typeIndex, serialIndex, clnIndex, inventoryIndex, roomLocationIndex, damagedIndex
+			nameIndex, typeIndex, serialIndex, inventoryIndex, roomLocationIndex, damagedIndex
 		});
 		
 		const equipment = await getEquipment();
@@ -499,7 +485,6 @@
 			const name = values[nameIndex]?.replace(/"/g, '').trim();
 			const type = values[typeIndex]?.replace(/"/g, '').trim();
 			const serialNumber = values[serialIndex]?.replace(/"/g, '').trim();
-			const clnNumber = clnIndex >= 0 && values[clnIndex] ? values[clnIndex].replace(/"/g, '').trim() : '';
 			const inventoryNumber = inventoryIndex >= 0 && values[inventoryIndex] ? values[inventoryIndex].replace(/"/g, '').trim() : '';
 			const roomLocation = roomLocationIndex >= 0 && values[roomLocationIndex] ? values[roomLocationIndex].replace(/"/g, '').trim() : '';
 			const damaged = damagedIndex >= 0 && values[damagedIndex] ? 
@@ -527,7 +512,6 @@
 				name,
 				type,
 				serialNumber,
-				clnNumber,
 				inventoryNumber,
 				roomLocation,
 				damaged
@@ -776,21 +760,6 @@
 							</div>
 						{/if}
 
-						{#if shouldShowClnNumber}
-							<div>
-								<label for="equipment-clnNumber" class="block text-sm font-medium text-gray-700 mb-2">
-									{APP_CONFIG.formFields.equipment.clnNumber.label} <span class="text-gray-400">(opcjonalny)</span>:
-								</label>
-								<input
-									id="equipment-clnNumber"
-									type={APP_CONFIG.formFields.equipment.clnNumber.type}
-									bind:value={newEquipment.clnNumber}
-									placeholder={APP_CONFIG.formFields.equipment.clnNumber.placeholder}
-									class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
-								/>
-							</div>
-						{/if}
-						
 						<button
 							onclick={handleAddEquipment}
 							class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"

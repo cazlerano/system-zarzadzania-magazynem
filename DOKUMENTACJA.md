@@ -136,10 +136,9 @@ myapp/
 
 - **Funkcjonalności:**
   - Dodawanie, edytowanie i usuwanie sprzętu
-  - Numery identyfikacyjne: seryjny, CLN, inwentarzowy
+  - Numery identyfikacyjne: seryjny, inwentarzowy
   - Status uszkodzenia sprzętu
   - Lokalizacja dla monitorów i drukarek
-  - Automatyczne generowanie numerów CLN dla komputerów
   - Filtrowanie po typie, statusie, użytkowniku
   - Sortowanie według różnych kryteriów
 
@@ -243,7 +242,6 @@ Modal do edycji i dodawania sprzętu.
 
 **Funkcjonalności:**
 - Walidacja formularza
-- Automatyczne generowanie numerów CLN
 - Obsługa różnych typów sprzętu
 - Checkbox dla statusu uszkodzenia
 
@@ -307,18 +305,18 @@ Modal do przeglądania historii użytkownika.
 
 #### Sprzęt (Equipment)
 ```json
+```json
 {
-  "id": 1,
   "name": "Dell Latitude 5520",
   "type": "Komputer",
   "serialNumber": "DL123456789",
-  "clnNumber": "CLN00001",
   "inventoryNumber": "INV001",
   "roomLocation": "",
   "damaged": false,
   "assignedUser": "jan.kowalski@firma.pl",
   "createdAt": "2025-01-13T10:00:00.000Z"
 }
+```
 ```
 
 #### Historia (History)
@@ -367,7 +365,6 @@ Główny moduł zarządzania danymi zawiera funkcje:
 - `assignEquipmentToUser(equipmentId, userEmail)` - przypisz sprzęt
 - `unassignEquipmentFromUser(equipmentId)` - odłącz sprzęt
 - `updateEquipmentDamageStatus(equipmentId, damaged)` - zmień status uszkodzenia
-- `generateNextClnNumber()` - generuj kolejny numer CLN
 - `bulkAddEquipment(items)` - masowe dodawanie sprzętu
 
 #### Historia
@@ -397,7 +394,7 @@ Główny moduł zarządzania danymi zawiera funkcje:
 3. **Dodawanie sprzętu**
    - W zakładce "Import", sekcja "Import Sprzętu"
    - Wypełnij wymagane pola: nazwa, typ, numer seryjny
-   - Pola CLN, inwentarzowy i lokalizacja są opcjonalne
+   - Pola inwentarzowy i lokalizacja są opcjonalne
 
 ### Codzienne użytkowanie
 
@@ -679,7 +676,7 @@ npm run dev
 #### Problemy z dodawaniem sprzętu
 - **Problem**: "Wszystkie pola są wymagane"
 - **Rozwiązanie**: Tylko nazwa, typ i numer seryjny są wymagane
-- **Uwaga**: CLN, inwentarzowy i lokalizacja są opcjonalne
+- **Uwaga**: inwentarzowy i lokalizacja są opcjonalne
 
 #### Problemy z dokumentami
 - **Problem**: Dokumenty nie są zapisywane
@@ -718,60 +715,6 @@ cat data/equipment.json
 - Brak twardych limitów na liczbę rekordów
 - Wydajność zależy od przeglądarki i sprzętu
 - Zalecane do ~1000 pozycji sprzętu i ~100 użytkowników
-
----
-
-## Changelog
-
-### v0.8.2 Beta (Aktualna)
-
-#### ✨ Nowe funkcjonalności
-- Dodano stronę "O Projekcie" z informacjami o aplikacji
-- Dodano obsługę nowego typu sprzętu: YubiKey
-- Dodano status "uszkodzony" dla sprzętu z wizualnym oznaczeniem
-- Dodano filtr "Uszkodzone" w zarządzaniu sprzętem
-- Dodano dashboard tile dla uszkodzonego sprzętu
-- Dodano modal "Historia użytkownika"
-- Dodano polską pluralizację dla wszystkich liczb w UI
-
-#### 🔧 Poprawki
-- Naprawiono walidację pól opcjonalnych w formularzach
-- Naprawiono obsługę wydarzeń w Svelte 5 (onclick syntax)
-- Naprawiono logikę przełączania przypisz/odłącz w modalach
-- Naprawiono eksport CSV z uwzględnieniem nowych pól
-- Naprawiono import CSV z obsługą pola "damaged"
-
-#### 🏗️ Refaktoryzacja
-- Centralizacja konfiguracji modali dla DRY principle
-- Ujednolicenie logiki formatowania liczb
-- Usunięcie duplikacji kodu w komponentach
-- Przejście na Svelte 5 Runes w całej aplikacji
-- Usprawnienie zarządzania stanem globalnym
-
-#### 🗑️ Usunięte funkcjonalności
-- Usunięto funkcje alertów o nieużywanym sprzęcie z panelu admin
-- Usunięto generowanie raportów PDF z panelu admin
-- Odinstalowano pakiety jspdf i jspdf-autotable
-
-#### 📝 Dokumentacja
-- Całkowicie przepisana dokumentacja projektu
-- Dodano szczegółowe przewodniki użytkownika i dewelopera
-- Dodano dokumentację API i komponentów
-- Dodano sekcję troubleshooting
-
-### Wcześniejsze wersje
-
-#### v0.8.1 Beta
-- Podstawowa funkcjonalność zarządzania sprzętem i użytkownikami
-- Import/export CSV
-- Podstawowy panel administracyjny
-- Zarządzanie dokumentami
-
-#### v0.8.0 Beta
-- Pierwsza wersja beta
-- Podstawowe funkcjonalności CRUD
-- Interfejs użytkownika w Svelte 4
-- Proste przechowywanie danych w JSON
 
 ---
 

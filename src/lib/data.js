@@ -480,7 +480,6 @@ export async function addUser(name, email) {
  * @param {string} name - Nazwa sprzętu
  * @param {string} type - Typ sprzętu
  * @param {string} serialNumber - Numer seryjny
- * @param {string} [clnNumber] - Numer CLN (wymagany dla komputerów)
  * @param {string} [inventoryNumber] - Numer inwentarzowy (opcjonalny)
  * @param {string} [roomLocation] - Lokalizacja (opcjonalna, dla monitorów i drukarek)
  * @returns {Promise<boolean>} Czy operacja się powiodła
@@ -489,23 +488,17 @@ export async function addEquipment(
   name,
   type,
   serialNumber,
-  clnNumber = "",
   inventoryNumber = "",
   roomLocation = "",
   damaged = false
 ) {
   try {
-    /** @type {{ name: string; type: string; serialNumber: string; clnNumber?: string; inventoryNumber?: string; roomLocation?: string; damaged?: boolean }} */
+    /** @type {{ name: string; type: string; serialNumber: string; inventoryNumber?: string; roomLocation?: string; damaged?: boolean }} */
     const equipmentData = {
       name: name.trim(),
       type: type,
       serialNumber: serialNumber.trim(),
     };
-
-    // Dodaj numer CLN dla komputerów
-    if (type === "Komputer" && clnNumber) {
-      equipmentData.clnNumber = clnNumber.trim();
-    }
 
     // Dodaj numer inwentarzowy, jeśli podano
     if (inventoryNumber && inventoryNumber.trim()) {
@@ -568,7 +561,7 @@ export async function addEquipment(
 
 /**
  * Masowe dodawanie sprzętu - import wielu pozycji jednocześnie
- * @param {Array<{name: string, type: string, serialNumber: string, clnNumber?: string, inventoryNumber?: string, roomLocation?: string, damaged?: boolean}>} items - Lista sprzętu do dodania
+ * @param {Array<{name: string, type: string, serialNumber: string, inventoryNumber?: string, roomLocation?: string, damaged?: boolean}>} items - Lista sprzętu do dodania
  * @returns {Promise<{success: boolean, results?: any, error?: string}>} Wynik operacji
  */
 export async function bulkAddEquipment(items) {
@@ -691,39 +684,6 @@ export async function deleteUser(userId) {
       success: false, 
       error: error instanceof APIError ? error.message : "Network error occurred"
     };
-  }
-}
-
-/**
- * Generuj kolejny numer CLN
- * @returns {Promise<string>} Wygenerowany numer CLN
- */
-export async function generateNextClnNumber() {
-  try {
-    /** @type {any[]} */
-    const equipment = await getEquipment();
-    const computers = equipment.filter(
-      (/** @type {any} */ item) => item.type === "Komputer" && item.clnNumber
-    );
-
-    if (computers.length === 0) {
-      return "CLN000001";
-    }
-
-    // Wyszukaj najwyższy numer CLN
-    const clnNumbers = computers
-      .map((/** @type {any} */ computer) => computer.clnNumber)
-      .filter((/** @type {any} */ cln) => cln && cln.startsWith("CLN"))
-      .map((/** @type {any} */ cln) => parseInt(cln.substring(3), 10))
-      .filter((/** @type {any} */ num) => !isNaN(num));
-
-    const maxNumber = Math.max(...clnNumbers);
-    const nextNumber = maxNumber + 1;
-
-    return `CLN${nextNumber.toString().padStart(6, "0")}`;
-  } catch (error) {
-    console.error("Error generating CLN number:", error);
-    return "CLN000001";
   }
 }
 

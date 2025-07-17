@@ -34,7 +34,6 @@ Aplikacja automatycznie utworzy następujące pliki podczas pierwszego uruchomie
     "name": "Dell Latitude 5520",
     "type": "Komputer",
     "serialNumber": "DL123456789",
-    "clnNumber": "CLN00001",
     "inventoryNumber": "INV001",
     "roomLocation": "",
     "damaged": false,

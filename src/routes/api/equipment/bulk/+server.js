@@ -92,7 +92,6 @@ export async function POST({ request }) {
           name: item.name,
           type: item.type,
           serialNumber: item.serialNumber,
-          clnNumber: item.clnNumber || "",
           inventoryNumber: item.inventoryNumber || "",
           roomLocation: item.roomLocation || "",
           status: "available",

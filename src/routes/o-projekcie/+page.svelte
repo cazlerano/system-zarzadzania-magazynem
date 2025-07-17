@@ -56,7 +56,7 @@
 				{
 					icon: "📦",
 					title: "Inwentaryzacja sprzętu",
-					description: "Kompletna baza sprzętu z numerami seryjnymi, CLN, inwentarzowymi i statusem"
+					description: "Kompletna baza sprzętu z numerami seryjnymi, inwentarzowymi i statusem"
 				},
 				{
 					icon: "🔗",

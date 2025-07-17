@@ -27,7 +27,6 @@
 			{ header: 'Nazwa', key: 'name', width: 25 },
 			{ header: 'Typ', key: 'type', width: 15 },
 			{ header: 'Numer seryjny', key: 'serialNumber', width: 20 },
-			{ header: 'Numer CLN', key: 'clnNumber', width: 15 },
 			{ header: 'Numer inwentarzowy', key: 'inventoryNumber', width: 20 },
 			{ header: 'Status', key: 'status', width: 15 },
 			{ header: 'Uszkodzone', key: 'damaged', width: 10 },
@@ -59,7 +58,7 @@
 	};
 	
 	// Typy
-	/** @typedef {{id: number, name: string, type: string, serialNumber: string, clnNumber?: string, inventoryNumber?: string, roomLocation?: string, assignedUser?: {name: string, email: string}, lastModified?: string, damaged?: boolean}} Equipment */
+	/** @typedef {{id: number, name: string, type: string, serialNumber: string, inventoryNumber?: string, roomLocation?: string, assignedUser?: {name: string, email: string}, lastModified?: string, damaged?: boolean}} Equipment */
 	
 	// Zarządzanie stanem
 	let equipment = $state(/** @type {Equipment[]} */ ([]));
@@ -132,7 +131,6 @@
 			name: item.name,
 			type: item.type,
 			serialNumber: item.serialNumber,
-			clnNumber: item.clnNumber || '-',
 			inventoryNumber: item.inventoryNumber || '-',
 			status: isEquipmentAssigned(item) ? 'Przypisane' : 'Magazyn IT',
 			damaged: item.damaged ? 'Tak' : 'Nie',
@@ -169,7 +167,6 @@
 			const matchesSearch = !searchTerm || 
 				item.name.toLowerCase().includes(searchLower) ||
 				item.serialNumber.toLowerCase().includes(searchLower) ||
-				(item.clnNumber && item.clnNumber.toLowerCase().includes(searchLower)) ||
 				(item.inventoryNumber && item.inventoryNumber.toLowerCase().includes(searchLower)) ||
 				(item.roomLocation && item.roomLocation.toLowerCase().includes(searchLower)) ||
 				(item.assignedUser && item.assignedUser.email.toLowerCase().includes(searchLower));
@@ -177,27 +174,16 @@
 			return matchesType && matchesStatus && matchesSearch;
 		});
 
-		// Sortuj sprzęt: komputery według numeru CLN (rosnąco), pozostałe według nazwy
+		// Sortuj sprzęt według nazwy
 		return filtered.sort((a, b) => {
-			// Dla komputerów, sortuj najpierw według numeru CLN
-			if (a.type === 'Komputer' && b.type === 'Komputer') {
-				const aClnNum = a.clnNumber ? parseInt(a.clnNumber.replace(/\D/g, '')) : 0;
-				const bClnNum = b.clnNumber ? parseInt(b.clnNumber.replace(/\D/g, '')) : 0;
-				
-				// Jeśli oba mają numery CLN, sortuj według numeru
-				if (a.clnNumber && b.clnNumber) {
-					return aClnNum - bClnNum;
-				}
-				// Pozycje z CLN przed pozycjami bez CLN
-				if (a.clnNumber && !b.clnNumber) return -1;
-				if (!a.clnNumber && b.clnNumber) return 1;
-				// Jeśli żadna nie ma CLN, sortuj według nazwy
-				return a.name.localeCompare(b.name, 'pl');
-			}
-			
 			// Komputery na początku, potem sortuj według typu i nazwy
 			if (a.type === 'Komputer' && b.type !== 'Komputer') return -1;
 			if (a.type !== 'Komputer' && b.type === 'Komputer') return 1;
+			
+			// Dla komputerów, sortuj według nazwy
+			if (a.type === 'Komputer' && b.type === 'Komputer') {
+				return a.name.localeCompare(b.name, 'pl');
+			}
 			
 			// Dla nie-komputerów, sortuj najpierw według typu, potem według nazwy
 			if (a.type !== b.type) {
@@ -405,7 +391,7 @@
 						id="search"
 						type="text"
 						bind:value={searchTerm}
-						placeholder="Nazwa, S/N, CLN, INV, lokalizacja..."
+						placeholder="Nazwa, S/N, INV, lokalizacja..."
 						class="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
 					/>
 				</div>
@@ -571,9 +557,6 @@
 												<span class="text-lg mr-1">{getEquipmentIcon(item.type)}</span>
 												<div class="text-xs text-green-900">
 													<div class="truncate">{item.type}</div>
-													{#if item.type === 'Komputer' && item.clnNumber}
-														<div class="text-xs text-green-600 truncate">({item.clnNumber})</div>
-													{/if}
 												</div>
 											</div>
 										</td>

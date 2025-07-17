@@ -1,7 +1,7 @@
 <script>
 	import { assignEquipment, unassignEquipment, getAvailableEquipment, equipmentTypes } from '$lib/data.js';
 	
-	/** @typedef {Object} Equipment @property {number} id @property {string} name @property {string} type @property {string} serialNumber @property {string} clnNumber @property {string} inventoryNumber @property {boolean} [damaged] */
+	/** @typedef {Object} Equipment @property {number} id @property {string} name @property {string} type @property {string} serialNumber @property {string} inventoryNumber @property {boolean} [damaged] */
 	/** @typedef {Object} User @property {number} id @property {string} name @property {string} email @property {Equipment[]} equipment */
 	/** @typedef {Object} EquipmentManagementModalProps @property {boolean} isOpen @property {User} selectedUser @property {Function} onUpdate */
 	
@@ -99,9 +99,6 @@
 	 */
 	function formatEquipmentDisplay(item) {
 		let display = `${item.name} (S/N: ${item.serialNumber})`;
-		if (item.type === 'Komputer' && item.clnNumber) {
-			display += ` • CLN: ${item.clnNumber}`;
-		}
 		return display;
 	}
 	
