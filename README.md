@@ -5,6 +5,8 @@ System do zarządzania magazynem sprzętu IT z funkcjami przypisywania sprzętu 
 **Wersja:** beta 0.8.2  
 **Autor:** Karol Żmijkowski
 
+W celach uruchomienia, zapoznaj się z [DOKUMENTACJA.md](Dokumentacją)
+
 ## Funkcjonalności
 
 - 👥 Zarządzanie użytkownikami
