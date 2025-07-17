@@ -87,5 +87,5 @@ Aplikacja automatycznie utworzy następujące pliki podczas pierwszego uruchomie
 ## Uwagi
 
 - Pliki są tworzone automatycznie przy pierwszym uruchomieniu aplikacji
-- Aplikacja gracefully radzi sobie z brakiem plików danych
+- Aplikacja radzi sobie z brakiem plików danych
 - Wszystkie pliki *.json w tym katalogu są ignorowane przez git (patrz .gitignore)

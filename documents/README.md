@@ -10,7 +10,6 @@ Ten katalog zawiera przesłane dokumenty (PDF, DOCX, itp.).
 
 ## Bezpieczeństwo
 
-- Wszystkie przesłane pliki w tym katalogu są ignorowane przez git
 - Katalog jest automatycznie tworzony przy pierwszym uruchomieniu aplikacji
 - Uprawnienia do plików są zarządzane przez system operacyjny
 
@@ -26,4 +25,4 @@ Dokumenty są dostępne przez endpointy:
 
 - Maksymalny rozmiar pliku jest ograniczony przez konfigurację serwera
 - Aplikacja automatycznie czyści nieużywane pliki
-- Wszystkie pliki w tym katalogu (oprócz README.md i .gitkeep) są ignorowane przez git
+
