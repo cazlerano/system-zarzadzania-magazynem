@@ -35,6 +35,4 @@ _karolzmijkowski@proton.me_
 
 Projekt udostępniony na licencji MIT License. Zobacz plik [LICENSE](LICENSE) po więcej szczegółów.
 
-**Copyright © 2025 Karol Żmijkowski**
-
 _Projekt może być swobodnie używany w celach komercyjnych i niekomercyjnych._
