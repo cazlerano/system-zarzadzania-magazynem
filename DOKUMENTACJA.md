@@ -740,4 +740,4 @@ Projekt jest otwarty na propozycje ulepszeń:
 
 ---
 
-**Ostatnia aktualizacja dokumentacji**: 14 lipca 2025
+**Ostatnia aktualizacja dokumentacji**: 17 lipca 2025
