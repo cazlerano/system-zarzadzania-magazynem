@@ -1,6 +1,6 @@
 # System Zarządzania Magazynem (WMS)
 
-System do zarządzania magazynem sprzętu IT z funkcjami przypisywania sprzętu do użytkowników, śledzenia historii oraz zarządzania dokumentami.
+System do zarządzania magazynem sprzętu IT z funkcjami przypisywania sprzętu do użytkowników, śledzenia historii oraz zarządzania dokumentami, utworzony z myślą o małych organizacjach.
 
 **Wersja:** beta 0.8.2  
 **Autor:** Karol Żmijkowski
